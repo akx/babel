@@ -20,15 +20,14 @@ from __future__ import division
 
 import re
 import warnings
+from bisect import bisect_right
+from datetime import date, datetime, time, timedelta
+
 import pytz as _pytz
 
-from datetime import date, datetime, time, timedelta
-from bisect import bisect_right
-
-from babel.core import default_locale, get_global, Locale
-from babel.util import UTC, LOCALTZ
-from babel._compat import string_types, integer_types, number_types
-
+from babel._compat import integer_types, number_types, string_types
+from babel.core import Locale, default_locale, get_global
+from babel.util import LOCALTZ, UTC
 
 LC_TIME = default_locale('LC_TIME')
 
@@ -382,7 +381,7 @@ def get_timezone_location(dt_or_tzinfo=None, locale=LC_TIME):
     region_format = locale.zone_formats['region']
     territory = get_global('zone_territories').get(zone)
     if territory not in locale.territories:
-        territory = 'ZZ' # invalid/unknown
+        territory = 'ZZ'  # invalid/unknown
     territory_name = locale.territories[territory]
     if territory and len(get_global('territory_zones').get(territory, [])) == 1:
         return region_format % (territory_name)
@@ -604,7 +603,7 @@ def format_datetime(datetime=None, format='medium', tzinfo=None,
         datetime = datetime.replace(tzinfo=UTC)
     if tzinfo is not None:
         datetime = datetime.astimezone(get_timezone(tzinfo))
-        if hasattr(tzinfo, 'normalize'): # pytz
+        if hasattr(tzinfo, 'normalize'):  # pytz
             datetime = tzinfo.normalize(datetime)
 
     locale = Locale.parse(locale)
@@ -682,7 +681,7 @@ def format_time(time=None, format='medium', tzinfo=None, locale=LC_TIME):
     if isinstance(time, datetime):
         if tzinfo is not None:
             time = time.astimezone(tzinfo)
-            if hasattr(tzinfo, 'normalize'): # pytz
+            if hasattr(tzinfo, 'normalize'):  # pytz
                 time = tzinfo.normalize(time)
         time = time.timetz()
     elif tzinfo is not None:
@@ -695,11 +694,11 @@ def format_time(time=None, format='medium', tzinfo=None, locale=LC_TIME):
 
 
 TIMEDELTA_UNITS = (
-    ('year',   3600 * 24 * 365),
-    ('month',  3600 * 24 * 30),
-    ('week',   3600 * 24 * 7),
-    ('day',    3600 * 24),
-    ('hour',   3600),
+    ('year', 3600 * 24 * 365),
+    ('month', 3600 * 24 * 30),
+    ('week', 3600 * 24 * 7),
+    ('day', 3600 * 24),
+    ('hour', 3600),
     ('minute', 60),
     ('second', 1)
 )
@@ -998,7 +997,7 @@ class DateTimeFormat(object):
         return get_month_names(width, context, self.locale)[self.value.month]
 
     def format_week(self, char, num):
-        if char.islower(): # week of year
+        if char.islower():  # week of year
             day_of_year = self.get_day_of_year()
             week = self.get_week_number(day_of_year)
             if week == 0:
@@ -1006,7 +1005,7 @@ class DateTimeFormat(object):
                 week = self.get_week_number(self.get_day_of_year(date),
                                             date.weekday())
             return self.format(week, num)
-        else: # week of month
+        else:  # week of month
             week = self.get_week_number(self.value.day)
             if week == 0:
                 date = self.value - timedelta(days=self.value.day)
@@ -1040,7 +1039,7 @@ class DateTimeFormat(object):
 
     def format_milliseconds_in_day(self, num):
         msecs = self.value.microsecond // 1000 + self.value.second * 1000 + \
-                self.value.minute * 60000 + self.value.hour * 3600000
+            self.value.minute * 60000 + self.value.hour * 3600000
         return self.format(msecs, num)
 
     def format_timezone(self, char, num):
@@ -1160,7 +1159,7 @@ def parse_pattern(pattern):
 
     for idx, char in enumerate(pattern.replace("''", '\0')):
         if quotebuf is None:
-            if char == "'": # quote started
+            if char == "'":  # quote started
                 if fieldchar[0]:
                     append_field()
                 elif charbuf:
@@ -1182,10 +1181,10 @@ def parse_pattern(pattern):
                 charbuf.append(char)
 
         elif quotebuf is not None:
-            if char == "'": # end of quote
+            if char == "'":  # end of quote
                 charbuf.extend(quotebuf)
                 quotebuf = None
-            else: # inside quote
+            else:  # inside quote
                 quotebuf.append(char)
 
     if fieldchar[0]:

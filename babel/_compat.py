@@ -1,5 +1,8 @@
-import sys
 import array
+import sys
+from decimal import ROUND_HALF_EVEN as _RHE
+from decimal import Decimal as _dec
+from decimal import InvalidOperation as _invop
 
 PY2 = sys.version_info[0] == 2
 
@@ -57,12 +60,6 @@ else:
 number_types = integer_types + (float,)
 
 
-#
-# Use cdecimal when available
-#
-from decimal import (Decimal as _dec,
-                     InvalidOperation as _invop,
-                     ROUND_HALF_EVEN as _RHE)
 try:
     from cdecimal import (Decimal as _cdec,
                           InvalidOperation as _cinvop,

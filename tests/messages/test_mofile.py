@@ -14,8 +14,8 @@
 import os
 import unittest
 
-from babel.messages import mofile, Catalog
 from babel._compat import BytesIO, text_type
+from babel.messages import Catalog, mofile
 from babel.support import Translations
 
 

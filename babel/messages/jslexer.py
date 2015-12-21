@@ -10,8 +10,9 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from operator import itemgetter
 import re
+from operator import itemgetter
+
 from babel._compat import unichr
 
 operators = [

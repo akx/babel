@@ -11,19 +11,19 @@
 
 import re
 import time
-
 from cgi import parse_header
-from datetime import datetime, time as time_
+from copy import copy
+from datetime import time as time_
+from datetime import datetime
 from difflib import get_close_matches
 from email import message_from_string
-from copy import copy
 
 from babel import __version__ as VERSION
+from babel._compat import PY2, cmp, number_types, string_types
 from babel.core import Locale
 from babel.dates import format_datetime
 from babel.messages.plurals import get_plural
-from babel.util import odict, distinct, LOCALTZ, FixedOffsetTimezone
-from babel._compat import string_types, number_types, PY2, cmp
+from babel.util import LOCALTZ, FixedOffsetTimezone, distinct, odict
 
 __all__ = ['Message', 'Catalog', 'TranslationError']
 
@@ -378,8 +378,8 @@ class Catalog(object):
             headers.append(('Language', str(self.locale)))
         if (self.locale is not None) and ('LANGUAGE' in self.language_team):
             headers.append(('Language-Team',
-                           self.language_team.replace('LANGUAGE',
-                                                      str(self.locale))))
+                            self.language_team.replace('LANGUAGE',
+                                                       str(self.locale))))
         else:
             headers.append(('Language-Team', self.language_team))
         if self.locale is not None:
@@ -779,7 +779,7 @@ class Catalog(object):
                     if no_fuzzy_matching is False:
                         # do some fuzzy matching with difflib
                         if isinstance(key, tuple):
-                            matchkey = key[0] # just the msgid, no context
+                            matchkey = key[0]  # just the msgid, no context
                         else:
                             matchkey = key
                         matches = get_close_matches(matchkey.lower().strip(),

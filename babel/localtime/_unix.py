@@ -1,9 +1,11 @@
 from __future__ import with_statement
+
 import os
 import re
-import sys
-import pytz
 import subprocess
+import sys
+
+import pytz
 
 _systemconfig_tz = re.compile(r'^Time Zone: (.*)$(?m)')
 
@@ -26,6 +28,7 @@ def _tz_from_env(tzenv):
         raise pytz.UnknownTimeZoneError(
             "tzlocal() does not support non-zoneinfo timezones like %s. \n"
             "Please use a timezone in the form of Continent/City")
+
 
 def _get_localzone(_root='/'):
     """Tries to find the local timezone configuration.

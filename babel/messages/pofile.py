@@ -11,12 +11,13 @@
 """
 
 from __future__ import print_function
+
 import os
 import re
 
+from babel._compat import text_type
 from babel.messages.catalog import Catalog, Message
 from babel.util import wraptext
-from babel._compat import text_type
 
 
 def unescape(string):
@@ -163,8 +164,13 @@ def read_po(fileobj, locale=None, domain=None, ignore_obsolete=False, charset=No
                 catalog.obsolete[msgid] = message
         else:
             catalog[msgid] = message
-        del messages[:]; del translations[:]; del context[:]; del locations[:];
-        del flags[:]; del auto_comments[:]; del user_comments[:];
+        del messages[:]
+        del translations[:]
+        del context[:]
+        del locations[:]
+        del flags[:]
+        del auto_comments[:]
+        del user_comments[:]
         obsolete[0] = False
         counter[0] += 1
 
@@ -230,7 +236,7 @@ def read_po(fileobj, locale=None, domain=None, ignore_obsolete=False, charset=No
             elif line[1:].startswith('.'):
                 # These are called auto-comments
                 comment = line[2:].strip()
-                if comment: # Just check that we're not adding empty comments
+                if comment:  # Just check that we're not adding empty comments
                     auto_comments.append(comment)
             else:
                 # These are called user comments
@@ -252,10 +258,10 @@ def read_po(fileobj, locale=None, domain=None, ignore_obsolete=False, charset=No
 
 
 WORD_SEP = re.compile('('
-    r'\s+|'                                 # any whitespace
-    r'[^\s\w]*\w+[a-zA-Z]-(?=\w+[a-zA-Z])|' # hyphenated words
-    r'(?<=[\w\!\"\'\&\.\,\?])-{2,}(?=\w)'   # em-dash
-')')
+                      r'\s+|'                                 # any whitespace
+                      r'[^\s\w]*\w+[a-zA-Z]-(?=\w+[a-zA-Z])|'  # hyphenated words
+                      r'(?<=[\w\!\"\'\&\.\,\?])-{2,}(?=\w)'   # em-dash
+                      ')')
 
 
 def escape(string):
@@ -434,7 +440,7 @@ def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
         messages.sort(key=lambda x: x.locations)
 
     for message in messages:
-        if not message.id: # This is the header "message"
+        if not message.id:  # This is the header "message"
             if omit_header:
                 continue
             comment_header = catalog.header_comment

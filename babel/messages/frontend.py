@@ -9,33 +9,36 @@
     :license: BSD, see LICENSE for more details.
 """
 from __future__ import print_function
-try:
-    from ConfigParser import RawConfigParser
-except ImportError:
-    from configparser import RawConfigParser
-from datetime import datetime
-from distutils import log
-from distutils.cmd import Command
-from distutils.errors import DistutilsOptionError, DistutilsSetupError
-from locale import getpreferredencoding
+
 import logging
-from optparse import OptionParser
 import os
 import re
 import shutil
 import sys
 import tempfile
+from datetime import datetime
+from distutils import log
+from distutils.cmd import Command
+from distutils.errors import DistutilsOptionError, DistutilsSetupError
+from locale import getpreferredencoding
+from optparse import OptionParser
 
 from babel import __version__ as VERSION
 from babel import Locale, localedata
+from babel._compat import PY2, StringIO, string_types
 from babel.core import UnknownLocaleError
 from babel.messages.catalog import Catalog
-from babel.messages.extract import extract_from_dir, DEFAULT_KEYWORDS, \
-                                   DEFAULT_MAPPING
+from babel.messages.extract import (
+    DEFAULT_KEYWORDS, DEFAULT_MAPPING, extract_from_dir
+)
 from babel.messages.mofile import write_mo
 from babel.messages.pofile import read_po, write_po
-from babel.util import odict, LOCALTZ
-from babel._compat import string_types, StringIO, PY2
+from babel.util import LOCALTZ, odict
+
+try:
+    from ConfigParser import RawConfigParser
+except ImportError:
+    from configparser import RawConfigParser
 
 
 class compile_catalog(Command):
@@ -138,7 +141,7 @@ class compile_catalog(Command):
                 translated = 0
                 for message in list(catalog)[1:]:
                     if message.string:
-                        translated +=1
+                        translated += 1
                 percentage = 0
                 if len(catalog):
                     percentage = translated * 100 // len(catalog)
@@ -268,9 +271,9 @@ class extract_messages(Command):
         if self.input_dirs:
             self.input_dirs = re.split(',\s*', self.input_dirs)
         else:
-            self.input_dirs = dict.fromkeys([k.split('.',1)[0]
-                for k in self.distribution.packages
-            ]).keys()
+            self.input_dirs = dict.fromkeys([k.split('.', 1)[0]
+                                             for k in self.distribution.packages
+                                             ]).keys()
 
         if self.add_comments:
             self._add_comments = self.add_comments.split(',')
@@ -300,8 +303,7 @@ class extract_messages(Command):
                                              keywords=self._keywords,
                                              comment_tags=self._add_comments,
                                              callback=callback,
-                                             strip_comment_tags=
-                                                self.strip_comments)
+                                             strip_comment_tags=self.strip_comments)
                 for filename, lineno, message, comments, context in extracted:
                     filepath = os.path.normpath(os.path.join(dirname, filename))
                     catalog.add(message, None, [(filepath, lineno)],
@@ -614,8 +616,8 @@ class CommandLineInterface(object):
     commands = {
         'compile': 'compile message catalogs to MO files',
         'extract': 'extract messages from source files and generate a POT file',
-        'init':    'create new message catalogs from a POT file',
-        'update':  'update existing message catalogs from a POT file'
+        'init': 'create new message catalogs from a POT file',
+        'update': 'update existing message catalogs from a POT file'
     }
 
     def run(self, argv=sys.argv):
@@ -770,7 +772,7 @@ class CommandLineInterface(object):
                 translated = 0
                 for message in list(catalog)[1:]:
                     if message.string:
-                        translated +=1
+                        translated += 1
                 percentage = 0
                 if len(catalog):
                     percentage = translated * 100 // len(catalog)
@@ -855,7 +857,7 @@ class CommandLineInterface(object):
 
         parser.set_defaults(charset='utf-8', keywords=[],
                             no_default_keywords=False, no_location=False,
-                            omit_header = False, width=None, no_wrap=False,
+                            omit_header=False, width=None, no_wrap=False,
                             sort_output=False, sort_by_file=False,
                             comment_tags=[], strip_comment_tags=False)
         options, args = parser.parse_args(argv)
@@ -914,8 +916,7 @@ class CommandLineInterface(object):
             extracted = extract_from_dir(dirname, method_map, options_map,
                                          keywords, options.comment_tags,
                                          callback=callback,
-                                         strip_comment_tags=
-                                            options.strip_comment_tags)
+                                         strip_comment_tags=options.strip_comment_tags)
             for filename, lineno, message, comments, context in extracted:
                 filepath = os.path.normpath(os.path.join(dirname, filename))
                 catalog.add(message, None, [(filepath, lineno)],
@@ -1046,7 +1047,7 @@ class CommandLineInterface(object):
                           help='locale of the translations catalog')
         parser.add_option('-w', '--width', dest='width', type='int',
                           help="set output line width (default 76)")
-        parser.add_option('--no-wrap', dest='no_wrap', action = 'store_true',
+        parser.add_option('--no-wrap', dest='no_wrap', action='store_true',
                           help='do not break long message lines, longer than '
                                'the output line width, into several lines')
         parser.add_option('--ignore-obsolete', dest='ignore_obsolete',
@@ -1205,7 +1206,7 @@ def parse_mapping(fileobj, filename=None):
     options_map = {}
 
     parser = RawConfigParser()
-    parser._sections = odict(parser._sections) # We need ordered sections
+    parser._sections = odict(parser._sections)  # We need ordered sections
     parser.readfp(fileobj, filename)
     for section in parser.sections():
         if section == 'extractors':

@@ -9,9 +9,9 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from babel.core import default_locale, Locale
 from operator import itemgetter
 
+from babel.core import Locale, default_locale
 
 # XXX: remove this file, duplication with babel.plural
 

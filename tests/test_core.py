@@ -13,10 +13,11 @@
 
 import doctest
 import unittest
+
 import pytest
 
-from babel import core, Locale
-from babel.core import default_locale, Locale
+from babel import Locale, core
+from babel.core import Locale, default_locale
 
 
 def test_locale_provides_access_to_cldr_locale_data():
@@ -24,10 +25,12 @@ def test_locale_provides_access_to_cldr_locale_data():
     assert u'English (United States)' == locale.display_name
     assert u'.' == locale.number_symbols['decimal']
 
+
 def test_locale_repr():
     assert ("Locale('de', territory='DE')" == repr(Locale('de', 'DE')))
     assert ("Locale('zh', territory='CN', script='Hans')" ==
             repr(Locale('zh', 'CN', script='Hans')))
+
 
 def test_locale_comparison():
     en_US = Locale('en', 'US')
@@ -36,6 +39,7 @@ def test_locale_comparison():
 
     bad_en_US = Locale('en_US')
     assert en_US != bad_en_US
+
 
 def test_can_return_default_locale(os_environ):
     os_environ['LC_MESSAGES'] = 'fr_FR.UTF-8'
@@ -257,6 +261,7 @@ def test_negotiate_locale():
             'ja_JP')
     assert core.negotiate_locale(['no', 'sv'], ['nb_NO', 'sv_SE']) == 'nb_NO'
 
+
 def test_parse_locale():
     assert core.parse_locale('zh_CN') == ('zh', 'CN', None, None)
     assert core.parse_locale('zh_Hans_CN') == ('zh', 'CN', 'Hans', None)
@@ -289,6 +294,7 @@ def test_compatible_classes_in_global_and_localedata(filename):
     import pickle
 
     class Unpickler(pickle.Unpickler):
+
         def find_class(self, module, name):
             # *.dat files must have compatible classes between Python 2 and 3
             if module.split('.')[0] == 'babel':

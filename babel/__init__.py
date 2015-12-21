@@ -22,5 +22,4 @@ from babel.core import (  # noqa
     negotiate_locale, parse_locale
 )
 
-
 __version__ = '2.2.0.dev0'
