@@ -34,6 +34,10 @@ develop:
 tox-test: import-cldr
 	@tox
 
+fix-style:
+	isort -rc babel tests
+	autopep8 -ri babel tests
+
 upload-docs:
 	$(MAKE) -C docs html dirhtml latex
 	$(MAKE) -C docs/_build/latex all-pdf
@@ -45,4 +49,4 @@ upload-docs:
 release: import-cldr
 	python scripts/make-release.py
 
-.PHONY: test develop tox-test clean-pyc clean-cldr import-cldr clean release upload-docs clean-test-env standalone-test
+.PHONY: test develop tox-test clean-pyc clean-cldr import-cldr clean release upload-docs clean-test-env standalone-test fix-style
