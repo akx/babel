@@ -204,7 +204,7 @@ class LazyProxy(object):
         return str(self.value)
 
     def __unicode__(self):
-        return unicode(self.value)
+        return unicode(self.value)  # noqa
 
     def __add__(self, other):
         return self.value + other

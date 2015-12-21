@@ -580,9 +580,9 @@ class NumberPattern(object):
             elif self.int_prec[1]:
                 exp = int(exp / self.int_prec[1]) * self.int_prec[1]
             if exp < 0:
-                value = value * 10**(-exp)
+                value = value * (10 ** (-exp))
             else:
-                value = value / 10**exp
+                value = value / (10 ** exp)
             exp_sign = ''
             if exp < 0:
                 exp_sign = get_minus_sign_symbol(locale)
@@ -676,7 +676,6 @@ class NumberPattern(object):
             value += ('0' * (min - len(value)))
         if max == 0 or (min == 0 and int(value) == 0):
             return ''
-        width = len(value)
         while len(value) > min and value[-1] == '0':
             value = value[:-1]
         return get_decimal_symbol(locale) + value

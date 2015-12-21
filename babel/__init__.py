@@ -17,8 +17,10 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from babel.core import UnknownLocaleError, Locale, default_locale, \
-     negotiate_locale, parse_locale, get_locale_identifier
+from babel.core import (  # noqa
+    Locale, UnknownLocaleError, default_locale, get_locale_identifier,
+    negotiate_locale, parse_locale
+)
 
 
 __version__ = '2.2.0.dev0'
