@@ -545,8 +545,8 @@ msgstr ""''')
 class PofileFunctionsTestCase(unittest.TestCase):
 
     def test_unescape(self):
-        escaped = u'"Say:\\n  \\"hello, world!\\"\\n"'
-        unescaped = u'Say:\n  "hello, world!"\n'
+        escaped = u'"Say:\\r\\n  \\"hello,\\tworld!\\"\\n"'
+        unescaped = u'Say:\r\n  "hello,\tworld!"\n'
         self.assertNotEqual(unescaped, escaped)
         self.assertEqual(unescaped, pofile.unescape(escaped))
 

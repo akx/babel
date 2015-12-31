@@ -13,6 +13,8 @@
 
 import doctest
 import unittest
+
+import os
 import pytest
 
 from babel import core, Locale
@@ -102,6 +104,12 @@ class TestLocaleClass:
 
         de_DE = Locale.parse(l)
         assert (de_DE.language, de_DE.territory) == ('de', 'DE')
+
+    def test_parse_corner_cases(self):
+        assert Locale.parse(None) is None
+
+        with pytest.raises(TypeError):
+            Locale.parse(4)
 
     def test_parse_likely_subtags(self):
         l = Locale.parse('zh-TW', sep='-')
@@ -311,3 +319,13 @@ def test_compatible_classes_in_global_and_localedata(filename):
 
     with open(filename, 'rb') as f:
         return Unpickler(f).load()
+
+
+def test_get_global_raises_error_when_no_file(monkeypatch):
+    # Feign that the filesystem is empty...
+    monkeypatch.setattr(os.path, 'isfile', lambda p: False)
+
+    # Then see that we get the error.
+    with pytest.raises(RuntimeError):
+        core._global_data = None
+        core.get_global("test")

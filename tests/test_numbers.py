@@ -14,7 +14,7 @@
 import unittest
 import pytest
 
-from datetime import date
+from datetime import date, datetime
 
 from babel import numbers
 from babel._compat import Decimal
@@ -186,7 +186,7 @@ def test_get_territory_currencies():
             'tender': True
         }]
 
-    assert numbers.get_territory_currencies('LS', date(2013, 1, 1)) == ['ZAR', 'LSL']
+    assert numbers.get_territory_currencies('LS', datetime(2013, 1, 1), datetime(2013, 1, 2)) == ['ZAR', 'LSL']
 
     assert numbers.get_territory_currencies('QO', date(2013, 1, 1)) == []
 
@@ -318,3 +318,9 @@ def test_parse_grouping():
 def test_parse_pattern():
     assert numbers.parse_pattern(u'¤#,##0.00;(¤#,##0.00)').suffix == (u'', u')')
     assert numbers.parse_pattern(u'¤ #,##0.00;¤ #,##0.00-').suffix == (u'', u'-')
+
+    with pytest.raises(ValueError):
+        numbers.parse_pattern(u'@.0')
+
+    with pytest.raises(ValueError):
+        numbers.parse_pattern(u'purple')
