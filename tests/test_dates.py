@@ -547,3 +547,13 @@ def test_lithuanian_long_format():
         dates.format_date(date(2015, 12, 10), locale='lt_LT', format='long') ==
         u'2015 m. gruodžio 10 d.'
     )
+
+
+def test_get_timezone_transition():
+    fi_tz = dates.get_timezone("Europe/Helsinki")
+    trans = dates.get_next_timezone_transition(fi_tz, datetime(2016, 8, 1))
+    assert trans.activates == datetime(2016, 10, 30, 1, 0, 0)
+    assert trans.from_tz == "EEST"
+    assert trans.to_tz == "EET"
+    assert trans.from_offset == 60 * 60 * 3
+    assert trans.to_offset == 60 * 60 * 2
