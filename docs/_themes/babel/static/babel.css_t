@@ -211,8 +211,6 @@ div.admonition {
     background: #fafafa;
     margin: 20px -30px;
     padding: 10px 30px;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
 }
 
 div.admonition tt.xref, div.admonition a tt {
@@ -220,8 +218,8 @@ div.admonition tt.xref, div.admonition a tt {
 }
 
 dd div.admonition {
-    margin-left: -60px;
-    padding-left: 60px;
+    margin: 0 0 10px;
+    padding: 5px 15px;
 }
 
 div.admonition p.admonition-title {
@@ -230,7 +228,10 @@ div.admonition p.admonition-title {
     font-size: 24px;
     margin: 0 0 10px 0;
     padding: 0;
-    line-height: 1;
+}
+
+dd div.admonition p.admonition-title {
+    font-size: 18px;
 }
 
 div.admonition p.last {
@@ -245,14 +246,8 @@ dt:target, .highlight {
     background: #FAF3E8;
 }
 
-div.note {
-    background-color: #eee;
-    border: 1px solid #ccc;
-}
-
 div.seealso {
     background-color: #ffc;
-    border: 1px solid #ff6;
 }
 
 div.topic {
