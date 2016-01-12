@@ -550,6 +550,8 @@ class Locale(object):
         .. note:: The format of the value returned may change between
                   Babel versions.
 
+        .. seealso:: :func:`babel.numbers.format_number`
+
         >>> Locale('fr', 'FR').number_symbols['decimal']
         u','
         """
@@ -562,6 +564,8 @@ class Locale(object):
         .. note:: The format of the value returned may change between
                   Babel versions.
 
+        .. seealso:: :func:`babel.numbers.format_number`
+
         >>> Locale('en', 'US').decimal_formats[None]
         <NumberPattern u'#,##0.###'>
         """
@@ -573,6 +577,8 @@ class Locale(object):
 
         .. note:: The format of the value returned may change between
                   Babel versions.
+
+        .. seealso:: :func:`babel.numbers.format_currency`
 
         >>> Locale('en', 'US').currency_formats['standard']
         <NumberPattern u'\\xa4#,##0.00'>
@@ -588,6 +594,8 @@ class Locale(object):
         .. note:: The format of the value returned may change between
                   Babel versions.
 
+        .. seealso:: :func:`babel.numbers.format_percent`
+
         >>> Locale('en', 'US').percent_formats[None]
         <NumberPattern u'#,##0%'>
         """
@@ -599,6 +607,8 @@ class Locale(object):
 
         .. note:: The format of the value returned may change between
                   Babel versions.
+
+        .. seealso:: :func:`babel.numbers.format_scientific`
 
         >>> Locale('en', 'US').scientific_formats[None]
         <NumberPattern u'#E0'>
@@ -663,6 +673,8 @@ class Locale(object):
 
         .. note:: The format of the value returned may change between
                   Babel versions.
+
+        .. seealso:: :func:`babel.dates.get_timezone_name`
 
         >>> Locale('en', 'US').time_zones['Europe/London']['long']['daylight']
         u'British Summer Time'
@@ -754,6 +766,8 @@ class Locale(object):
         <DateTimePattern u'M/d/yy'>
         >>> Locale('fr', 'FR').date_formats['long']
         <DateTimePattern u'd MMMM y'>
+
+        .. seealso:: :func:`babel.dates.format_date`
         """
         return self._data['date_formats']
 
@@ -763,6 +777,8 @@ class Locale(object):
 
         .. note:: The format of the value returned may change between
                   Babel versions.
+
+        .. seealso:: :func:`babel.dates.format_time`
 
         >>> Locale('en', 'US').time_formats['short']
         <DateTimePattern u'h:mm a'>
@@ -777,6 +793,8 @@ class Locale(object):
 
         .. note:: The format of the value returned may change between
                   Babel versions.
+
+        .. seealso:: :func:`babel.dates.format_datetime`
 
         >>> Locale('en').datetime_formats['full']
         u"{1} 'at' {0}"
@@ -795,6 +813,9 @@ class Locale(object):
         <DateTimePattern u'E dd/MM'>
         >>> Locale('fr').datetime_skeletons['H']
         <DateTimePattern u"HH 'h'">
+
+        .. seealso:: :func:`babel.dates.format_skeleton`
+        .. versionadded:: 2.3
         """
         return self._data['datetime_skeletons']
 
@@ -819,6 +840,9 @@ class Locale(object):
 
         .. note:: The format of the value returned may change between
                   Babel versions.
+
+        .. seealso:: :func:`babel.lists.format_list`
+        .. versionadded:: 2.2
 
         >>> Locale('en').list_patterns['start']
         u'{0}, {1}'

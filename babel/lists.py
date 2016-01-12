@@ -29,6 +29,8 @@ def format_list(lst, locale=DEFAULT_LOCALE):
     >>> format_list(['apples', 'oranges', 'pears'], 'zh')
     u'apples\u3001oranges\u548cpears'
 
+    .. versionadded:: 2.2
+
     :param lst: a sequence of items to format in to a list
     :param locale: the locale
     """
