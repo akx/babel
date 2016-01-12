@@ -5,8 +5,8 @@ Installation
 
 Babel is distributed as a standard Python package fully set up with all
 the dependencies it needs.  It primarily depends on the excellent `pytz`_
-library for timezone handling.  To install it you can use ``easy_install``
-or ``pip``.
+library for timezone handling.  To install it you can use ``pip`` (or
+``easy_install``).
 
 .. _pytz: http://pytz.sourceforge.net/
 
@@ -22,10 +22,12 @@ it there, too.
 If you are on Mac OS X or Linux, chances are that one of the following two
 commands will work for you::
 
+    $ sudo pip install virtualenv
+    $ # or this, if the above did not work
     $ sudo easy_install virtualenv
 
-If you are on Windows and don't have the `easy_install` command, you must
-install it first.  Check the :ref:`windows-easy-install` section for more
+If you are on Windows and don't have the `pip` command, you must
+install it first.  Check the :ref:`windows-pip` section for more
 information about how to do that.  Once you have it installed, run the same
 commands as above, but without the `sudo` prefix.
 
@@ -56,7 +58,7 @@ virtualenv::
 
     $ pip install Babel
 
-A few seconds later and you are good to go.
+A few seconds later you are good to go.
 
 System-Wide Installation
 ------------------------
@@ -104,16 +106,15 @@ changes you will have to re-run ``python setup.py import_cldr``.
 
 .. _windows-easy-install:
 
-`pip` and `distribute` on Windows
------------------------------------
+`pip` on Windows
+----------------
 
-On Windows, installation of `easy_install` is a little bit trickier, but
-still quite easy.  The easiest way to do it is to download the
-`distribute_setup.py`_ file and run it.  The easiest way to run the file
+On Windows, installation of `pip` is easiest with the ``get-pip`` script.
+Download `get-pip.py`_ and run it.  The easiest way to run the file
 is to open your downloads folder and double-click on the file.
 
-Next, add the `easy_install` command and other Python scripts to the
-command search path, by adding your Python installation's Scripts folder
+Next, add the `pip` command and other Python scripts to the
+command search path by adding your Python installation's Scripts folder
 to the `PATH` environment variable.  To do that, right-click on the
 "Computer" icon on the Desktop or in the Start menu, and choose "Properties".
 Then click on "Advanced System settings" (in Windows XP, click on the
@@ -121,18 +122,14 @@ Then click on "Advanced System settings" (in Windows XP, click on the
 Finally, double-click on the "Path" variable in the "System variables" section,
 and add the path of your Python interpreter's Scripts folder. Be sure to
 delimit it from existing values with a semicolon.  Assuming you are using
-Python 2.7 on the default path, add the following value::
+Python 2.7 on the default path, append the following value::
 
 
     ;C:\Python27\Scripts
 
 And you are done!  To check that it worked, open the Command Prompt and execute
-``easy_install``.  If you have User Account Control enabled on Windows Vista or
+``pip``.  If you have User Account Control enabled on Windows Vista or
 Windows 7, it should prompt you for administrator privileges.
 
-Now that you have ``easy_install``, you can use it to install ``pip``::
 
-    > easy_install pip
-
-
-.. _distribute_setup.py: http://python-distribute.org/distribute_setup.py
+.. _get-pip.py: https://bootstrap.pypa.io/get-pip.py
