@@ -13,9 +13,10 @@ except ImportError:
     from urllib import urlretrieve
 
 
-URL = 'http://unicode.org/Public/cldr/37/core.zip'
-FILENAME = 'cldr-core-37.zip'
-FILESUM = 'ba93f5ba256a61a6f8253397c6c4b1a9b9e77531f013cc7ffa7977b5f7e4da57'
+URL = 'http://unicode.org/Public/cldr/38/cldr-common-38.0.zip'
+FILENAME = 'cldr-common-38.0.zip'
+# Via https://unicode.org/Public/cldr/38/hashes/SHASUM512.txt
+FILESUM = '76a2cdfbe74bd25825dd0a91f81d3651d6baab374b7cffd2346d9194b30d2bf16940e448ede5b1c5f470ad2ff7df082a957ec6eade336b9baaafd40870648b1e'
 BLKSIZE = 131072
 
 
@@ -53,7 +54,7 @@ def is_good_file(filename):
     if not os.path.isfile(filename):
         log('Local copy \'%s\' not found', filename)
         return False
-    h = hashlib.sha256()
+    h = hashlib.sha512()
     with open(filename, 'rb') as f:
         while 1:
             blk = f.read(BLKSIZE)
