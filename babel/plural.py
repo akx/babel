@@ -20,7 +20,7 @@ _fallback_tag = 'other'
 def extract_operands(source):
     """Extract operands from a decimal, a float or an int, according to `CLDR rules`_.
 
-    The result is a 6-tuple (n, i, v, w, f, t), where those symbols are as follows:
+    The result is a 8-tuple (n, i, v, w, f, t, c, e), where those symbols are as follows:
 
     ====== ===============================================================
     Symbol Value
@@ -31,14 +31,16 @@ def extract_operands(source):
     w      number of visible fraction digits in n, without trailing zeros.
     f      visible fractional digits in n, with trailing zeros.
     t      visible fractional digits in n, without trailing zeros.
+    c      compact decimal exponent value: exponent of the power of 10 used in compact decimal formatting.
+    e      currently, synonym for ‘c’. however, may be redefined in the future.
     ====== ===============================================================
 
-    .. _`CLDR rules`: https://www.unicode.org/reports/tr35/tr35-33/tr35-numbers.html#Operands
+    .. _`CLDR rules`: https://www.unicode.org/reports/tr35/tr35-61/tr35-numbers.html#Operands
 
     :param source: A real number
     :type source: int|float|decimal.Decimal
-    :return: A n-i-v-w-f-t tuple
-    :rtype: tuple[decimal.Decimal, int, int, int, int, int]
+    :return: A n-i-v-w-f-t-c-e tuple
+    :rtype: tuple[decimal.Decimal, int, int, int, int, int, int, int]
     """
     n = abs(source)
     i = int(n)
@@ -70,7 +72,8 @@ def extract_operands(source):
         t = int(no_trailing or 0)
     else:
         v = w = f = t = 0
-    return n, i, v, w, f, t
+    c = e = 0  # TODO: c and e are not supported
+    return n, i, v, w, f, t, c, e
 
 
 class PluralRule(object):
@@ -217,7 +220,7 @@ def to_python(rule):
     to_python_func = _PythonCompiler().compile
     result = [
         'def evaluate(n):',
-        ' n, i, v, w, f, t = extract_operands(n)',
+        ' n, i, v, w, f, t, c, e = extract_operands(n)',
     ]
     for tag, ast in PluralRule.parse(rule).abstract:
         # the str() call is to coerce the tag to the native string.  It's
@@ -318,7 +321,16 @@ def cldr_modulo(a, b):
 class RuleError(Exception):
     """Raised if a rule is malformed."""
 
-_VARS = 'nivwft'
+_VARS = {
+    'n',  # absolute value of the source number.
+    'i',  # integer digits of n.
+    'v',  # number of visible fraction digits in n, with trailing zeros.*
+    'w',  # number of visible fraction digits in n, without trailing zeros.*
+    'f',  # visible fraction digits in n, with trailing zeros.*
+    't',  # visible fraction digits in n, without trailing zeros.*
+    'c',  # compact decimal exponent value: exponent of the power of 10 used in compact decimal formatting.
+    'e',  # currently, synonym for ‘c’. however, may be redefined in the future.
+}
 
 _RULES = [
     (None, re.compile(r'\s+', re.UNICODE)),
@@ -380,22 +392,23 @@ class _Parser(object):
     tree of tuples. It implements the following grammar::
 
         condition     = and_condition ('or' and_condition)*
-                        ('@integer' samples)?
-                        ('@decimal' samples)?
+        samples       = ('@integer' sampleList)?
+                        ('@decimal' sampleList)?
         and_condition = relation ('and' relation)*
         relation      = is_relation | in_relation | within_relation
         is_relation   = expr 'is' ('not')? value
         in_relation   = expr (('not')? 'in' | '=' | '!=') range_list
         within_relation = expr ('not')? 'within' range_list
         expr          = operand (('mod' | '%') value)?
-        operand       = 'n' | 'i' | 'f' | 't' | 'v' | 'w'
+        operand       = 'n' | 'i' | 'f' | 't' | 'v' | 'w' | 'c' | 'e'
         range_list    = (range | value) (',' range_list)*
         value         = digit+
-        digit         = 0|1|2|3|4|5|6|7|8|9
+        digit         = [0-9]
+        digitPos      = [1-9]
         range         = value'..'value
-        samples       = sampleRange (',' sampleRange)* (',' ('…'|'...'))?
-        sampleRange   = decimalValue '~' decimalValue
-        decimalValue  = value ('.' value)?
+        sampleList    = sampleRange (',' sampleRange)* (',' ('…'|'...'))?
+        sampleRange   = sampleValue ('~' sampleValue)?
+        sampleValue   = value ('.' digit+)? ([ce] digitPos digit+)?
 
     - Whitespace can occur between or around any of the above tokens.
     - Rules should be mutually exclusive; for a given numeric value, only one
@@ -418,8 +431,10 @@ class _Parser(object):
             return
         self.ast = self.condition()
         if self.tokens:
-            raise RuleError('Expected end of rule, got %r' %
-                            self.tokens[-1][1])
+            raise RuleError(
+                'Expected end of rule %r, still got %r' %
+                (string, self.tokens)
+            )
 
     def expect(self, type_, value=None, term=None):
         token = skip_token(self.tokens, type_, value)
@@ -526,6 +541,8 @@ class _Compiler(object):
     compile_w = lambda x: 'w'
     compile_f = lambda x: 'f'
     compile_t = lambda x: 't'
+    compile_c = lambda x: 'c'
+    compile_e = lambda x: 'e'
     compile_value = lambda x, v: str(v)
     compile_and = _binary_compiler('(%s && %s)')
     compile_or = _binary_compiler('(%s || %s)')
