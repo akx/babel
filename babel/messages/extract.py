@@ -314,7 +314,7 @@ def extract(method, fileobj, keywords=DEFAULT_KEYWORDS, comment_tags=(),
             func = builtin.get(method)
 
     if func is None:
-        raise ValueError('Unknown extraction method %r' % method)
+        raise ValueError(f'Unknown extraction method {method!r}')
 
     results = func(fileobj, keywords.keys(), comment_tags,
                    options=options or {})
@@ -359,8 +359,8 @@ def extract(method, fileobj, keywords=DEFAULT_KEYWORDS, comment_tags=(),
             first_msg_index = spec[0] - 1
         if not messages[first_msg_index]:
             # An empty string msgid isn't valid, emit a warning
-            where = '%s:%i' % (hasattr(fileobj, 'name') and
-                               fileobj.name or '(unknown)', lineno)
+            filename = hasattr(fileobj, 'name') and fileobj.name or '(unknown)'
+            where = f'{filename}:{lineno}'
             sys.stderr.write((empty_msgid_warning % where) + '\n')
             continue
 

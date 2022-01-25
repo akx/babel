@@ -68,11 +68,10 @@ def format_list(lst, style='standard', locale=DEFAULT_LOCALE):
         return lst[0]
 
     if style not in locale.list_patterns:
-        raise ValueError('Locale {} does not support list formatting style {!r} (supported are {})'.format(
-            locale,
-            style,
-            list(sorted(locale.list_patterns)),
-        ))
+        raise ValueError(
+            f'Locale {locale} does not support list formatting style {style!r} '
+            f'(supported are {sorted(locale.list_patterns)})'
+        )
     patterns = locale.list_patterns[style]
 
     if len(lst) == 2:

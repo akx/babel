@@ -112,8 +112,7 @@ class Message:
         self.context = context
 
     def __repr__(self):
-        return '<{} {!r} (flags: {!r})>'.format(type(self).__name__, self.id,
-                                        list(self.flags))
+        return f'<{type(self).__name__} {self.id!r} (flags: {list(self.flags)!r})>'
 
     def __cmp__(self, other):
         """Compare Messages, taking into account plural ids"""
@@ -302,7 +301,7 @@ class Catalog:
                 self._locale = None
             return
 
-        raise TypeError('`locale` must be a Locale, a locale identifier string, or None; got %r' % locale)
+        raise TypeError(f'`locale` must be a Locale, a locale identifier string, or None; got {locale!r}')
 
     def _get_locale(self):
         return self._locale
@@ -324,7 +323,7 @@ class Catalog:
                          .replace('ORGANIZATION', self.copyright_holder)
         locale_name = (self.locale.english_name if self.locale else self.locale_identifier)
         if locale_name:
-            comment = comment.replace('Translations template', '%s translations' % locale_name)
+            comment = comment.replace('Translations template', f'{locale_name} translations')
         return comment
 
     def _set_header_comment(self, string):
@@ -389,10 +388,9 @@ class Catalog:
         if self.locale is not None:
             headers.append(('Plural-Forms', self.plural_forms))
         headers.append(('MIME-Version', '1.0'))
-        headers.append(('Content-Type',
-                        'text/plain; charset=%s' % self.charset))
+        headers.append(('Content-Type', f'text/plain; charset={self.charset}'))
         headers.append(('Content-Transfer-Encoding', '8bit'))
-        headers.append(('Generated-By', 'Babel %s\n' % VERSION))
+        headers.append(('Generated-By', f'Babel {VERSION}\n'))
         return headers
 
     def _force_text(self, s, encoding='utf-8', errors='strict'):
@@ -448,7 +446,7 @@ class Catalog:
     >>> catalog = Catalog(project='Foobar', version='1.0',
     ...                   creation_date=created)
     >>> for name, value in catalog.mime_headers:
-    ...     print('%s: %s' % (name, value))
+    ...     print(f'{name}: {value}')
     Project-Id-Version: Foobar 1.0
     Report-Msgid-Bugs-To: EMAIL@ADDRESS
     POT-Creation-Date: 1990-04-01 15:30+0000
@@ -468,7 +466,7 @@ class Catalog:
     ...                   last_translator='John Doe <jd@example.com>',
     ...                   language_team='de_DE <de@example.com>')
     >>> for name, value in catalog.mime_headers:
-    ...     print('%s: %s' % (name, value))
+    ...     print(f'{name}: {value}')
     Project-Id-Version: Foobar 1.0
     Report-Msgid-Bugs-To: EMAIL@ADDRESS
     POT-Creation-Date: 1990-04-01 15:30+0000
@@ -561,7 +559,7 @@ class Catalog:
     def __repr__(self):
         locale = ''
         if self.locale:
-            locale = ' %s' % self.locale
+            locale = f' {self.locale}'
         return f'<{type(self).__name__} {self.domain!r}{locale}>'
 
     def __delitem__(self, id):
@@ -616,13 +614,13 @@ class Catalog:
         elif id == '':
             # special treatment for the header message
             self.mime_headers = message_from_string(message.string).items()
-            self.header_comment = '\n'.join([('# %s' % c).rstrip() for c
+            self.header_comment = '\n'.join([f'# {c}'.rstrip() for c
                                              in message.user_comments])
             self.fuzzy = message.fuzzy
         else:
             if isinstance(id, (list, tuple)):
                 assert isinstance(message.string, (list, tuple)), \
-                    'Expected sequence but got %s' % type(message.string)
+                    f'Expected sequence but got {type(message.string)}'
             self._messages[key] = message
 
     def add(self, id, string=None, locations=(), flags=(), auto_comments=(),

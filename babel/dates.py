@@ -203,7 +203,7 @@ def get_timezone(zone=None):
     try:
         return _pytz.timezone(zone)
     except _pytz.UnknownTimeZoneError:
-        raise LookupError('Unknown timezone %s' % zone)
+        raise LookupError(f'Unknown timezone {zone}')
 
 
 def get_next_timezone_transition(zone=None, dt=None):
@@ -287,11 +287,7 @@ class TimezoneTransition:
         return int(self.to_tzinfo._utcoffset.total_seconds())
 
     def __repr__(self):
-        return '<TimezoneTransition {} -> {} ({})>'.format(
-            self.from_tz,
-            self.to_tz,
-            self.activates,
-        )
+        return f'<TimezoneTransition {self.from_tz} -> {self.to_tz} ({self.activates})>'
 
 
 def get_period_names(width='wide', context='stand-alone', locale=LC_TIME):
@@ -1293,7 +1289,7 @@ class DateTimeFormat:
         elif char in ('z', 'Z', 'v', 'V', 'x', 'X', 'O'):
             return self.format_timezone(char, num)
         else:
-            raise KeyError('Unsupported date/time field %r' % char)
+            raise KeyError(f'Unsupported date/time field {char!r}')
 
     def extract(self, char):
         char = str(char)[0]
@@ -1583,11 +1579,10 @@ def parse_pattern(pattern):
             fieldchar, fieldnum = tok_value
             limit = PATTERN_CHARS[fieldchar]
             if limit and fieldnum not in limit:
-                raise ValueError('Invalid length for field: %r'
-                                 % (fieldchar * fieldnum))
-            result.append('%%(%s)s' % (fieldchar * fieldnum))
+                raise ValueError(f'Invalid length for field: {fieldchar * fieldnum!r}')
+            result.append(f'%({fieldchar * fieldnum})s')
         else:
-            raise NotImplementedError("Unknown token type: %s" % tok_type)
+            raise NotImplementedError(f"Unknown token type: {tok_type}")
 
     _pattern_cache[pattern] = pat = DateTimePattern(pattern, ''.join(result))
     return pat
@@ -1679,7 +1674,8 @@ def untokenize_pattern(tokens):
             if not any(ch in PATTERN_CHARS for ch in tok_value):  # No need to quote
                 output.append(tok_value)
             else:
-                output.append("'%s'" % tok_value.replace("'", "''"))
+                double_quoted_tok_value = tok_value.replace("'", "''")
+                output.append(f"'{double_quoted_tok_value}'")
     return "".join(output)
 
 

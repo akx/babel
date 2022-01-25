@@ -532,29 +532,21 @@ def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
     def _write_message(message, prefix=''):
         if isinstance(message.id, (list, tuple)):
             if message.context:
-                _write('{}msgctxt {}\n'.format(prefix,
-                                           _normalize(message.context, prefix)))
+                _write(f'{prefix}msgctxt {_normalize(message.context, prefix)}\n')
             _write(f'{prefix}msgid {_normalize(message.id[0], prefix)}\n')
-            _write('{}msgid_plural {}\n'.format(
-                prefix, _normalize(message.id[1], prefix)
-            ))
+            _write(f'{prefix}msgid_plural {_normalize(message.id[1], prefix)}\n')
 
             for idx in range(catalog.num_plurals):
                 try:
                     string = message.string[idx]
                 except IndexError:
                     string = ''
-                _write('%smsgstr[%d] %s\n' % (
-                    prefix, idx, _normalize(string, prefix)
-                ))
+                _write(f'{prefix}msgstr[{idx}] {_normalize(string, prefix)}\n')
         else:
             if message.context:
-                _write('{}msgctxt {}\n'.format(prefix,
-                                           _normalize(message.context, prefix)))
+                _write(f'{prefix}msgctxt {_normalize(message.context, prefix)}\n')
             _write(f'{prefix}msgid {_normalize(message.id, prefix)}\n')
-            _write('{}msgstr {}\n'.format(
-                prefix, _normalize(message.string or '', prefix)
-            ))
+            _write(f"{prefix}msgstr {_normalize(message.string or '', prefix)}\n")
 
     sort_by = None
     if sort_output:
@@ -595,20 +587,18 @@ def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
 
             for filename, lineno in locations:
                 if lineno and include_lineno:
-                    locs.append('%s:%d' % (filename.replace(os.sep, '/'), lineno))
+                    locs.append(f'{filename.replace(os.sep, "/")}:{lineno}')
                 else:
-                    locs.append('%s' % filename.replace(os.sep, '/'))
+                    locs.append(f"{filename.replace(os.sep, '/')}")
             _write_comment(' '.join(locs), prefix=':')
         if message.flags:
-            _write('#%s\n' % ', '.join([''] + sorted(message.flags)))
+            _write(f"#{', '.join([''] + sorted(message.flags))}\n")
 
         if message.previous_id and include_previous:
-            _write_comment('msgid %s' % _normalize(message.previous_id[0]),
+            _write_comment(f'msgid {_normalize(message.previous_id[0])}',
                            prefix='|')
             if len(message.previous_id) > 1:
-                _write_comment('msgid_plural %s' % _normalize(
-                    message.previous_id[1]
-                ), prefix='|')
+                _write_comment(f'msgid_plural {_normalize(message.previous_id[1])}', prefix='|')
 
         _write_message(message)
         _write('\n')

@@ -62,8 +62,7 @@ def is_good_file(filename):
             h.update(blk)
         digest = h.hexdigest()
         if digest != FILESUM:
-            raise RuntimeError('Checksum mismatch: %r != %r'
-                               % (digest, FILESUM))
+            raise RuntimeError(f'Checksum mismatch: {digest!r} != {FILESUM!r}')
         else:
             return True
 

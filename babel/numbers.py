@@ -43,7 +43,7 @@ class UnknownCurrencyError(Exception):
         """Create the exception.
         :param identifier: the identifier string of the unsupported currency
         """
-        Exception.__init__(self, 'Unknown currency %r.' % identifier)
+        Exception.__init__(self, f'Unknown currency {identifier!r}.')
 
         #: The identifier of the locale that could not be found.
         self.identifier = identifier
@@ -527,7 +527,7 @@ def format_currency(
             pattern = locale.currency_formats[format_type]
         except KeyError:
             raise UnknownCurrencyFormatError(
-                "%r is not a known currency format type" % format_type)
+                f"{format_type!r} is not a known currency format type")
 
     return pattern.apply(
         number, locale, currency=currency, currency_digits=currency_digits,
@@ -684,7 +684,7 @@ def parse_number(string, locale=LC_NUMERIC):
     try:
         return int(string.replace(get_group_symbol(locale), ''))
     except ValueError:
-        raise NumberFormatError('%r is not a valid number' % string)
+        raise NumberFormatError(f'{string!r} is not a valid number')
 
 
 def parse_decimal(string, locale=LC_NUMERIC, strict=False):
@@ -740,7 +740,7 @@ def parse_decimal(string, locale=LC_NUMERIC, strict=False):
         parsed = decimal.Decimal(string.replace(group_symbol, '')
                                        .replace(decimal_symbol, '.'))
     except decimal.InvalidOperation:
-        raise NumberFormatError('%r is not a valid decimal number' % string)
+        raise NumberFormatError(f'{string!r} is not a valid decimal number')
     if strict and group_symbol in string:
         proper = format_decimal(parsed, locale=locale, decimal_quantization=False)
         if string != proper and string.rstrip('0') != (proper + decimal_symbol):
@@ -749,15 +749,13 @@ def parse_decimal(string, locale=LC_NUMERIC, strict=False):
                                                    .replace(group_symbol, '.'))
             except decimal.InvalidOperation:
                 raise NumberFormatError((
-                    "%r is not a properly formatted decimal number. Did you mean %r?" %
-                    (string, proper)
+                    f"{string!r} is not a properly formatted decimal number. Did you mean {proper!r}?"
                 ), suggestions=[proper])
             else:
                 proper_alt = format_decimal(parsed_alt, locale=locale, decimal_quantization=False)
                 if proper_alt == proper:
                     raise NumberFormatError((
-                            "%r is not a properly formatted decimal number. Did you mean %r?" %
-                            (string, proper)
+                            f"{string!r} is not a properly formatted decimal number. Did you mean {proper!r}?"
                     ), suggestions=[proper])
                 else:
                     raise NumberFormatError((
@@ -770,12 +768,11 @@ def parse_decimal(string, locale=LC_NUMERIC, strict=False):
 PREFIX_END = r'[^0-9@#.,]'
 NUMBER_TOKEN = r'[0-9@#.,E+]'
 
-PREFIX_PATTERN = r"(?P<prefix>(?:'[^']*'|%s)*)" % PREFIX_END
-NUMBER_PATTERN = r"(?P<number>%s*)" % NUMBER_TOKEN
+PREFIX_PATTERN = fr"(?P<prefix>(?:'[^']*'|{PREFIX_END})*)"
+NUMBER_PATTERN = fr'(?P<number>{NUMBER_TOKEN}*)'
 SUFFIX_PATTERN = r"(?P<suffix>.*)"
 
-number_re = re.compile(r"{}{}{}".format(PREFIX_PATTERN, NUMBER_PATTERN,
-                                    SUFFIX_PATTERN))
+number_re = re.compile(fr"{PREFIX_PATTERN}{NUMBER_PATTERN}{SUFFIX_PATTERN}")
 
 
 def parse_grouping(p):
@@ -808,7 +805,7 @@ def parse_pattern(pattern):
     def _match_number(pattern):
         rv = number_re.search(pattern)
         if rv is None:
-            raise ValueError('Invalid number pattern %r' % pattern)
+            raise ValueError(f'Invalid number pattern {pattern!r}')
         return rv.groups()
 
     pos_pattern = pattern

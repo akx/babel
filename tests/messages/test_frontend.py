@@ -1117,10 +1117,9 @@ msgstr[2] ""
         self.cli.run(sys.argv + ['compile',
                                  '--locale', 'de_DE',
                                  '-d', i18n_dir])
-        assert not os.path.isfile(mo_file), 'Expected no file at %r' % mo_file
-        self.assertEqual("""\
-catalog %s is marked as fuzzy, skipping
-""" % po_file, sys.stderr.getvalue())
+        assert not os.path.isfile(mo_file), f'Expected no file at {mo_file!r}'
+        self.assertEqual(f"""catalog {po_file} is marked as fuzzy, skipping
+""", sys.stderr.getvalue())
 
     def test_compile_fuzzy_catalog(self):
         po_file = _po_file('de_DE')
@@ -1130,9 +1129,8 @@ catalog %s is marked as fuzzy, skipping
                                      '--locale', 'de_DE', '--use-fuzzy',
                                      '-d', i18n_dir])
             assert os.path.isfile(mo_file)
-            self.assertEqual("""\
-compiling catalog {} to {}
-""".format(po_file, mo_file), sys.stderr.getvalue())
+            self.assertEqual(f"""compiling catalog {po_file} to {mo_file}
+""", sys.stderr.getvalue())
         finally:
             if os.path.isfile(mo_file):
                 os.unlink(mo_file)
@@ -1145,9 +1143,8 @@ compiling catalog {} to {}
                                      '--locale', 'ru_RU', '--use-fuzzy',
                                      '-d', i18n_dir])
             assert os.path.isfile(mo_file)
-            self.assertEqual("""\
-compiling catalog {} to {}
-""".format(po_file, mo_file), sys.stderr.getvalue())
+            self.assertEqual(f"""compiling catalog {po_file} to {mo_file}
+""", sys.stderr.getvalue())
         finally:
             if os.path.isfile(mo_file):
                 os.unlink(mo_file)
@@ -1163,10 +1160,9 @@ compiling catalog {} to {}
                                      '-d', i18n_dir])
             for mo_file in [mo_foo, mo_bar]:
                 assert os.path.isfile(mo_file)
-            self.assertEqual("""\
-compiling catalog {} to {}
-compiling catalog {} to {}
-""".format(po_foo, mo_foo, po_bar, mo_bar), sys.stderr.getvalue())
+            self.assertEqual(f"""compiling catalog {po_foo} to {mo_foo}
+compiling catalog {po_bar} to {mo_bar}
+""", sys.stderr.getvalue())
 
         finally:
             for mo_file in [mo_foo, mo_bar]:
@@ -1346,12 +1342,12 @@ def test_extract_keyword_args_384(split, arg_name):
     if split:  # Generate a command line with multiple -ks
         kwarg_text = " ".join(f"{arg_name} {kwarg_spec}" for kwarg_spec in kwarg_specs)
     else:  # Generate a single space-separated -k
-        kwarg_text = "{} \"{}\"".format(arg_name, " ".join(kwarg_specs))
+        kwarg_text = f"{arg_name} \"{' '.join(kwarg_specs)}\""
 
     # (Both of those invocation styles should be equivalent, so there is no parametrization from here on out)
 
     cmdinst = configure_cli_command(
-        "extract -F babel-django.cfg --add-comments Translators: -o django232.pot %s ." % kwarg_text
+        f"extract -F babel-django.cfg --add-comments Translators: -o django232.pot {kwarg_text} ."
     )
     assert isinstance(cmdinst, extract_messages)
     assert set(cmdinst.keywords.keys()) == {'_', 'dgettext', 'dngettext',

@@ -210,7 +210,7 @@ class NullTranslationsTestCase(unittest.TestCase):
     def test_same_methods(self):
         for name in self.method_names():
             if not hasattr(self.null_translations, name):
-                self.fail('NullTranslations does not provide method %r' % name)
+                self.fail(f'NullTranslations does not provide method {name!r}')
 
     def test_method_signature_compatibility(self):
         for name in self.method_names():
@@ -339,11 +339,11 @@ def test_format_percent():
 
 def test_lazy_proxy():
     def greeting(name='world'):
-        return 'Hello, %s!' % name
+        return f'Hello, {name}!'
     lazy_greeting = support.LazyProxy(greeting, name='Joe')
     assert str(lazy_greeting) == "Hello, Joe!"
     assert '  ' + lazy_greeting == '  Hello, Joe!'
-    assert '(%s)' % lazy_greeting == '(Hello, Joe!)'
+    assert f'({lazy_greeting})' == '(Hello, Joe!)'
 
     greetings = [
         support.LazyProxy(greeting, 'world'),

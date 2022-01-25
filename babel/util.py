@@ -83,8 +83,7 @@ def parse_encoding(fp):
                 magic_comment_encoding = m.group(1).decode('latin-1')
                 if magic_comment_encoding != 'utf-8':
                     raise SyntaxError(
-                        'encoding problem: {} with BOM'.format(
-                            magic_comment_encoding))
+                        f'encoding problem: {magic_comment_encoding} with BOM')
             return 'utf-8'
         elif m:
             return m.group(1).decode('latin-1')

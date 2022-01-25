@@ -437,10 +437,7 @@ def _process_local_datas(sup, srcdir, destdir, force=False, dump_json=False):
 
         unsupported_number_systems_string = ', '.join(sorted(data.pop('unsupported_number_systems')))
         if unsupported_number_systems_string:
-            log.warning('{}: unsupported number systems were ignored: {}'.format(
-                locale_id,
-                unsupported_number_systems_string,
-            ))
+            log.warning(f'{locale_id}: unsupported number systems were ignored: {unsupported_number_systems_string}')
 
         write_datafile(data_filename, data, dump_json=dump_json)
 

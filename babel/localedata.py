@@ -50,10 +50,10 @@ def resolve_locale_filename(name):
 
     # Ensure we're not left with one of the Windows reserved names.
     if sys.platform == "win32" and _windows_reserved_name_re.match(os.path.splitext(name)[0]):
-        raise ValueError("Name %s is invalid on Windows" % name)
+        raise ValueError(f"Name {name} is invalid on Windows")
 
     # Build the path.
-    return os.path.join(_dirname, '%s.dat' % name)
+    return os.path.join(_dirname, f'{name}.dat')
 
 
 def exists(name):
