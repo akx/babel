@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.messages.extract
     ~~~~~~~~~~~~~~~~~~~~~~
@@ -145,7 +144,7 @@ def extract_from_dir(dirname=None, method_map=DEFAULT_MAPPING,
         for filename in filenames:
             filepath = os.path.join(root, filename).replace(os.sep, '/')
 
-            for message_tuple in check_and_call_extract_file(
+            yield from check_and_call_extract_file(
                 filepath,
                 method_map,
                 options_map,
@@ -154,8 +153,7 @@ def extract_from_dir(dirname=None, method_map=DEFAULT_MAPPING,
                 comment_tags,
                 strip_comment_tags,
                 dirpath=absname,
-            ):
-                yield message_tuple
+            )
 
 
 def check_and_call_extract_file(filepath, method_map, options_map,
@@ -475,7 +473,7 @@ def extract_python(fileobj, keywords, comment_tags, options):
                 # encoding
                 # https://sourceforge.net/tracker/?func=detail&atid=355470&
                 # aid=617979&group_id=5470
-                code = compile('# coding=%s\n%s' % (str(encoding), value),
+                code = compile(f'# coding={str(encoding)}\n{value}',
                                '<string>', 'eval', future_flags)
                 value = eval(code, {'__builtins__': {}}, {})
                 buf.append(value)

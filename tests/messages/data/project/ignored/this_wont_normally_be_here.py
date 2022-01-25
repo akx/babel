@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # This file won't normally be in this directory.
 # It IS only for tests
 

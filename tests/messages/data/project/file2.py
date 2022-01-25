@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # file2.py for tests
 
 from gettext import ngettext

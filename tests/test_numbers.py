@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007-2011 Edgewall Software, 2013-2021 the Babel team
 # All rights reserved.
@@ -36,7 +35,7 @@ class FormatDecimalTestCase(unittest.TestCase):
         # regression test for #183, fraction digits were not correctly cutted
         # if the input was a float value and the value had more than 7
         # significant digits
-        self.assertEqual(u'12,345,678.05',
+        self.assertEqual('12,345,678.05',
                          numbers.format_decimal(12345678.051, '#,##0.00',
                                                 locale='en_US'))
 
@@ -160,28 +159,28 @@ class FormatDecimalTestCase(unittest.TestCase):
                                                                      locale='fr_CA', group_separator=False))
         self.assertEqual('29567,12', numbers.format_decimal(29567.12,
                                                                      locale='pt_BR', group_separator=False))
-        self.assertEqual(u'$1099.98', numbers.format_currency(1099.98, 'USD',
+        self.assertEqual('$1099.98', numbers.format_currency(1099.98, 'USD',
                                                              locale='en_US', group_separator=False))
-        self.assertEqual(u'101299,98\xa0€', numbers.format_currency(101299.98, 'EUR',
+        self.assertEqual('101299,98\xa0€', numbers.format_currency(101299.98, 'EUR',
                                                             locale='fr_CA', group_separator=False))
         self.assertEqual('101299.98 euros', numbers.format_currency(101299.98, 'EUR',
                                                             locale='en_US', group_separator=False, format_type='name'))
-        self.assertEqual(u'25123412\xa0%', numbers.format_percent(251234.1234, locale='sv_SE', group_separator=False))
+        self.assertEqual('25123412\xa0%', numbers.format_percent(251234.1234, locale='sv_SE', group_separator=False))
 
-        self.assertEqual(u'29,567.12', numbers.format_decimal(29567.12,
+        self.assertEqual('29,567.12', numbers.format_decimal(29567.12,
                                                             locale='en_US', group_separator=True))
-        self.assertEqual(u'29\u202f567,12', numbers.format_decimal(29567.12,
+        self.assertEqual('29\u202f567,12', numbers.format_decimal(29567.12,
                                                             locale='fr_CA', group_separator=True))
-        self.assertEqual(u'29.567,12', numbers.format_decimal(29567.12,
+        self.assertEqual('29.567,12', numbers.format_decimal(29567.12,
                                                             locale='pt_BR', group_separator=True))
-        self.assertEqual(u'$1,099.98', numbers.format_currency(1099.98, 'USD',
+        self.assertEqual('$1,099.98', numbers.format_currency(1099.98, 'USD',
                                                               locale='en_US', group_separator=True))
-        self.assertEqual(u'101\u202f299,98\xa0\u20ac', numbers.format_currency(101299.98, 'EUR',
+        self.assertEqual('101\u202f299,98\xa0\u20ac', numbers.format_currency(101299.98, 'EUR',
                                                                     locale='fr_CA', group_separator=True))
-        self.assertEqual(u'101,299.98 euros', numbers.format_currency(101299.98, 'EUR',
+        self.assertEqual('101,299.98 euros', numbers.format_currency(101299.98, 'EUR',
                                                                     locale='en_US', group_separator=True,
                                                                     format_type='name'))
-        self.assertEqual(u'25\xa0123\xa0412\xa0%', numbers.format_percent(251234.1234, locale='sv_SE', group_separator=True))
+        self.assertEqual('25\xa0123\xa0412\xa0%', numbers.format_percent(251234.1234, locale='sv_SE', group_separator=True))
 
 
 class NumberParsingTestCase(unittest.TestCase):
@@ -274,12 +273,12 @@ def test_normalize_currency():
 
 
 def test_get_currency_name():
-    assert numbers.get_currency_name('USD', locale='en_US') == u'US Dollar'
-    assert numbers.get_currency_name('USD', count=2, locale='en_US') == u'US dollars'
+    assert numbers.get_currency_name('USD', locale='en_US') == 'US Dollar'
+    assert numbers.get_currency_name('USD', count=2, locale='en_US') == 'US dollars'
 
 
 def test_get_currency_symbol():
-    assert numbers.get_currency_symbol('USD', 'en_US') == u'$'
+    assert numbers.get_currency_symbol('USD', 'en_US') == '$'
 
 
 def test_get_currency_precision():
@@ -320,24 +319,24 @@ def test_get_territory_currencies():
 
 
 def test_get_decimal_symbol():
-    assert numbers.get_decimal_symbol('en_US') == u'.'
+    assert numbers.get_decimal_symbol('en_US') == '.'
 
 
 def test_get_plus_sign_symbol():
-    assert numbers.get_plus_sign_symbol('en_US') == u'+'
+    assert numbers.get_plus_sign_symbol('en_US') == '+'
 
 
 def test_get_minus_sign_symbol():
-    assert numbers.get_minus_sign_symbol('en_US') == u'-'
-    assert numbers.get_minus_sign_symbol('nl_NL') == u'-'
+    assert numbers.get_minus_sign_symbol('en_US') == '-'
+    assert numbers.get_minus_sign_symbol('nl_NL') == '-'
 
 
 def test_get_exponential_symbol():
-    assert numbers.get_exponential_symbol('en_US') == u'E'
+    assert numbers.get_exponential_symbol('en_US') == 'E'
 
 
 def test_get_group_symbol():
-    assert numbers.get_group_symbol('en_US') == u','
+    assert numbers.get_group_symbol('en_US') == ','
 
 
 def test_decimal_precision():
@@ -347,21 +346,21 @@ def test_decimal_precision():
 
 
 def test_format_number():
-    assert numbers.format_number(1099, locale='en_US') == u'1,099'
-    assert numbers.format_number(1099, locale='de_DE') == u'1.099'
+    assert numbers.format_number(1099, locale='en_US') == '1,099'
+    assert numbers.format_number(1099, locale='de_DE') == '1.099'
 
 
 def test_format_decimal():
-    assert numbers.format_decimal(1.2345, locale='en_US') == u'1.234'
-    assert numbers.format_decimal(1.2346, locale='en_US') == u'1.235'
-    assert numbers.format_decimal(-1.2346, locale='en_US') == u'-1.235'
-    assert numbers.format_decimal(1.2345, locale='sv_SE') == u'1,234'
-    assert numbers.format_decimal(1.2345, locale='de') == u'1,234'
-    assert numbers.format_decimal(12345.5, locale='en_US') == u'12,345.5'
-    assert numbers.format_decimal(0001.2345000, locale='en_US') == u'1.234'
-    assert numbers.format_decimal(-0001.2346000, locale='en_US') == u'-1.235'
-    assert numbers.format_decimal(0000000.5, locale='en_US') == u'0.5'
-    assert numbers.format_decimal(000, locale='en_US') == u'0'
+    assert numbers.format_decimal(1.2345, locale='en_US') == '1.234'
+    assert numbers.format_decimal(1.2346, locale='en_US') == '1.235'
+    assert numbers.format_decimal(-1.2346, locale='en_US') == '-1.235'
+    assert numbers.format_decimal(1.2345, locale='sv_SE') == '1,234'
+    assert numbers.format_decimal(1.2345, locale='de') == '1,234'
+    assert numbers.format_decimal(12345.5, locale='en_US') == '12,345.5'
+    assert numbers.format_decimal(0001.2345000, locale='en_US') == '1.234'
+    assert numbers.format_decimal(-0001.2346000, locale='en_US') == '-1.235'
+    assert numbers.format_decimal(0000000.5, locale='en_US') == '0.5'
+    assert numbers.format_decimal(000, locale='en_US') == '0'
 
 
 @pytest.mark.parametrize('input_value, expected_value', [
@@ -401,37 +400,37 @@ def test_format_decimal_quantization():
 
 def test_format_currency():
     assert (numbers.format_currency(1099.98, 'USD', locale='en_US')
-            == u'$1,099.98')
+            == '$1,099.98')
     assert (numbers.format_currency(0, 'USD', locale='en_US')
-            == u'$0.00')
+            == '$0.00')
     assert (numbers.format_currency(1099.98, 'USD', locale='es_CO')
-            == u'US$\xa01.099,98')
+            == 'US$\xa01.099,98')
     assert (numbers.format_currency(1099.98, 'EUR', locale='de_DE')
-            == u'1.099,98\xa0\u20ac')
-    assert (numbers.format_currency(1099.98, 'EUR', u'\xa4\xa4 #,##0.00',
+            == '1.099,98\xa0\u20ac')
+    assert (numbers.format_currency(1099.98, 'EUR', '\xa4\xa4 #,##0.00',
                                     locale='en_US')
-            == u'EUR 1,099.98')
+            == 'EUR 1,099.98')
     assert (numbers.format_currency(1099.98, 'EUR', locale='nl_NL')
             != numbers.format_currency(-1099.98, 'EUR', locale='nl_NL'))
     assert (numbers.format_currency(1099.98, 'USD', format=None,
                                     locale='en_US')
-            == u'$1,099.98')
+            == '$1,099.98')
 
 
 def test_format_currency_format_type():
     assert (numbers.format_currency(1099.98, 'USD', locale='en_US',
                                     format_type="standard")
-            == u'$1,099.98')
+            == '$1,099.98')
     assert (numbers.format_currency(0, 'USD', locale='en_US',
                                     format_type="standard")
-            == u'$0.00')
+            == '$0.00')
 
     assert (numbers.format_currency(1099.98, 'USD', locale='en_US',
                                     format_type="accounting")
-            == u'$1,099.98')
+            == '$1,099.98')
     assert (numbers.format_currency(0, 'USD', locale='en_US',
                                     format_type="accounting")
-            == u'$0.00')
+            == '$0.00')
 
     with pytest.raises(numbers.UnknownCurrencyFormatError) as excinfo:
         numbers.format_currency(1099.98, 'USD', locale='en_US',
@@ -439,15 +438,15 @@ def test_format_currency_format_type():
     assert excinfo.value.args[0] == "'unknown' is not a known currency format type"
 
     assert (numbers.format_currency(1099.98, 'JPY', locale='en_US')
-            == u'\xa51,100')
-    assert (numbers.format_currency(1099.98, 'COP', u'#,##0.00', locale='es_ES')
-            == u'1.099,98')
+            == '\xa51,100')
+    assert (numbers.format_currency(1099.98, 'COP', '#,##0.00', locale='es_ES')
+            == '1.099,98')
     assert (numbers.format_currency(1099.98, 'JPY', locale='en_US',
                                     currency_digits=False)
-            == u'\xa51,099.98')
-    assert (numbers.format_currency(1099.98, 'COP', u'#,##0.00', locale='es_ES',
+            == '\xa51,099.98')
+    assert (numbers.format_currency(1099.98, 'COP', '#,##0.00', locale='es_ES',
                                     currency_digits=False)
-            == u'1.099,98')
+            == '1.099,98')
 
 
 @pytest.mark.parametrize('input_value, expected_value', [
@@ -487,30 +486,30 @@ def test_format_currency_quantization():
 
 def test_format_currency_long_display_name():
     assert (numbers.format_currency(1099.98, 'USD', locale='en_US', format_type='name')
-            == u'1,099.98 US dollars')
+            == '1,099.98 US dollars')
     assert (numbers.format_currency(1.00, 'USD', locale='en_US', format_type='name')
-            == u'1.00 US dollar')
+            == '1.00 US dollar')
     assert (numbers.format_currency(1.00, 'EUR', locale='en_US', format_type='name')
-            == u'1.00 euro')
+            == '1.00 euro')
     assert (numbers.format_currency(2, 'EUR', locale='en_US', format_type='name')
-            == u'2.00 euros')
+            == '2.00 euros')
     # This tests that '{1} {0}' unitPatterns are found:
     assert (numbers.format_currency(1, 'USD', locale='sw', format_type='name')
-            == u'dola ya Marekani 1.00')
+            == 'dola ya Marekani 1.00')
     # This tests unicode chars:
     assert (numbers.format_currency(1099.98, 'USD', locale='es_GT', format_type='name')
-            == u'dólares estadounidenses 1,099.98')
+            == 'dólares estadounidenses 1,099.98')
     # Test for completely unknown currency, should fallback to currency code
     assert (numbers.format_currency(1099.98, 'XAB', locale='en_US', format_type='name')
-            == u'1,099.98 XAB')
+            == '1,099.98 XAB')
 
     # Test for finding different unit patterns depending on count
     assert (numbers.format_currency(1, 'USD', locale='ro', format_type='name')
-            == u'1,00 dolar american')
+            == '1,00 dolar american')
     assert (numbers.format_currency(2, 'USD', locale='ro', format_type='name')
-            == u'2,00 dolari americani')
+            == '2,00 dolari americani')
     assert (numbers.format_currency(100, 'USD', locale='ro', format_type='name')
-            == u'100,00 de dolari americani')
+            == '100,00 de dolari americani')
 
 
 def test_format_currency_long_display_name_all():
@@ -532,15 +531,15 @@ def test_format_currency_long_display_name_custom_format():
 
 
 def test_format_percent():
-    assert numbers.format_percent(0.34, locale='en_US') == u'34%'
-    assert numbers.format_percent(0, locale='en_US') == u'0%'
-    assert numbers.format_percent(0.34, u'##0%', locale='en_US') == u'34%'
-    assert numbers.format_percent(34, u'##0', locale='en_US') == u'34'
-    assert numbers.format_percent(25.1234, locale='en_US') == u'2,512%'
+    assert numbers.format_percent(0.34, locale='en_US') == '34%'
+    assert numbers.format_percent(0, locale='en_US') == '0%'
+    assert numbers.format_percent(0.34, '##0%', locale='en_US') == '34%'
+    assert numbers.format_percent(34, '##0', locale='en_US') == '34'
+    assert numbers.format_percent(25.1234, locale='en_US') == '2,512%'
     assert (numbers.format_percent(25.1234, locale='sv_SE')
-            == u'2\xa0512\xa0%')
-    assert (numbers.format_percent(25.1234, u'#,##0\u2030', locale='en_US')
-            == u'25,123\u2030')
+            == '2\xa0512\xa0%')
+    assert (numbers.format_percent(25.1234, '#,##0\u2030', locale='en_US')
+            == '25,123\u2030')
 
 
 @pytest.mark.parametrize('input_value, expected_value', [
@@ -578,25 +577,25 @@ def test_format_percent_quantization():
 
 
 def test_format_scientific():
-    assert numbers.format_scientific(10000, locale='en_US') == u'1E4'
-    assert numbers.format_scientific(4234567, u'#.#E0', locale='en_US') == u'4.2E6'
-    assert numbers.format_scientific(4234567, u'0E0000', locale='en_US') == u'4.234567E0006'
-    assert numbers.format_scientific(4234567, u'##0E00', locale='en_US') == u'4.234567E06'
-    assert numbers.format_scientific(4234567, u'##00E00', locale='en_US') == u'42.34567E05'
-    assert numbers.format_scientific(4234567, u'0,000E00', locale='en_US') == u'4,234.567E03'
-    assert numbers.format_scientific(4234567, u'##0.#####E00', locale='en_US') == u'4.23457E06'
-    assert numbers.format_scientific(4234567, u'##0.##E00', locale='en_US') == u'4.23E06'
-    assert numbers.format_scientific(42, u'00000.000000E0000', locale='en_US') == u'42000.000000E-0003'
+    assert numbers.format_scientific(10000, locale='en_US') == '1E4'
+    assert numbers.format_scientific(4234567, '#.#E0', locale='en_US') == '4.2E6'
+    assert numbers.format_scientific(4234567, '0E0000', locale='en_US') == '4.234567E0006'
+    assert numbers.format_scientific(4234567, '##0E00', locale='en_US') == '4.234567E06'
+    assert numbers.format_scientific(4234567, '##00E00', locale='en_US') == '42.34567E05'
+    assert numbers.format_scientific(4234567, '0,000E00', locale='en_US') == '4,234.567E03'
+    assert numbers.format_scientific(4234567, '##0.#####E00', locale='en_US') == '4.23457E06'
+    assert numbers.format_scientific(4234567, '##0.##E00', locale='en_US') == '4.23E06'
+    assert numbers.format_scientific(42, '00000.000000E0000', locale='en_US') == '42000.000000E-0003'
 
 
 def test_default_scientific_format():
     """ Check the scientific format method auto-correct the rendering pattern
     in case of a missing fractional part.
     """
-    assert numbers.format_scientific(12345, locale='en_US') == u'1.2345E4'
-    assert numbers.format_scientific(12345.678, locale='en_US') == u'1.2345678E4'
-    assert numbers.format_scientific(12345, u'#E0', locale='en_US') == u'1.2345E4'
-    assert numbers.format_scientific(12345.678, u'#E0', locale='en_US') == u'1.2345678E4'
+    assert numbers.format_scientific(12345, locale='en_US') == '1.2345E4'
+    assert numbers.format_scientific(12345.678, locale='en_US') == '1.2345678E4'
+    assert numbers.format_scientific(12345, '#E0', locale='en_US') == '1.2345E4'
+    assert numbers.format_scientific(12345.678, '#E0', locale='en_US') == '1.2345678E4'
 
 
 @pytest.mark.parametrize('input_value, expected_value', [
@@ -662,18 +661,18 @@ def test_parse_grouping():
 def test_parse_pattern():
 
     # Original pattern is preserved
-    np = numbers.parse_pattern(u'¤#,##0.00')
-    assert np.pattern == u'¤#,##0.00'
+    np = numbers.parse_pattern('¤#,##0.00')
+    assert np.pattern == '¤#,##0.00'
 
-    np = numbers.parse_pattern(u'¤#,##0.00;(¤#,##0.00)')
-    assert np.pattern == u'¤#,##0.00;(¤#,##0.00)'
+    np = numbers.parse_pattern('¤#,##0.00;(¤#,##0.00)')
+    assert np.pattern == '¤#,##0.00;(¤#,##0.00)'
 
     # Given a NumberPattern object, we don't return a new instance.
     # However, we don't cache NumberPattern objects, so calling
     # parse_pattern with the same format string will create new
     # instances
-    np1 = numbers.parse_pattern(u'¤ #,##0.00')
-    np2 = numbers.parse_pattern(u'¤ #,##0.00')
+    np1 = numbers.parse_pattern('¤ #,##0.00')
+    np2 = numbers.parse_pattern('¤ #,##0.00')
     assert np1 is not np2
     assert np1 is numbers.parse_pattern(np1)
 
@@ -681,19 +680,19 @@ def test_parse_pattern():
 def test_parse_pattern_negative():
 
     # No negative format specified
-    np = numbers.parse_pattern(u'¤#,##0.00')
-    assert np.prefix == (u'¤', u'-¤')
-    assert np.suffix == (u'', u'')
+    np = numbers.parse_pattern('¤#,##0.00')
+    assert np.prefix == ('¤', '-¤')
+    assert np.suffix == ('', '')
 
     # Negative format is specified
-    np = numbers.parse_pattern(u'¤#,##0.00;(¤#,##0.00)')
-    assert np.prefix == (u'¤', u'(¤')
-    assert np.suffix == (u'', u')')
+    np = numbers.parse_pattern('¤#,##0.00;(¤#,##0.00)')
+    assert np.prefix == ('¤', '(¤')
+    assert np.suffix == ('', ')')
 
     # Negative sign is a suffix
-    np = numbers.parse_pattern(u'¤ #,##0.00;¤ #,##0.00-')
-    assert np.prefix == (u'¤ ', u'¤ ')
-    assert np.suffix == (u'', u'-')
+    np = numbers.parse_pattern('¤ #,##0.00;¤ #,##0.00-')
+    assert np.prefix == ('¤ ', '¤ ')
+    assert np.suffix == ('', '-')
 
 
 def test_numberpattern_repr():
@@ -701,7 +700,7 @@ def test_numberpattern_repr():
 
     # This implementation looks a bit funny, but that's cause strings are
     # repr'd differently in Python 2 vs 3 and this test runs under both.
-    format = u'¤#,##0.00;(¤#,##0.00)'
+    format = '¤#,##0.00;(¤#,##0.00)'
     np = numbers.parse_pattern(format)
     assert repr(format) in repr(np)
 

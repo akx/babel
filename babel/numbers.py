@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.numbers
     ~~~~~~~~~~~~~
@@ -285,7 +284,7 @@ def get_decimal_symbol(locale=LC_NUMERIC):
 
     :param locale: the `Locale` object or locale identifier
     """
-    return Locale.parse(locale).number_symbols.get('decimal', u'.')
+    return Locale.parse(locale).number_symbols.get('decimal', '.')
 
 
 def get_plus_sign_symbol(locale=LC_NUMERIC):
@@ -296,7 +295,7 @@ def get_plus_sign_symbol(locale=LC_NUMERIC):
 
     :param locale: the `Locale` object or locale identifier
     """
-    return Locale.parse(locale).number_symbols.get('plusSign', u'+')
+    return Locale.parse(locale).number_symbols.get('plusSign', '+')
 
 
 def get_minus_sign_symbol(locale=LC_NUMERIC):
@@ -307,7 +306,7 @@ def get_minus_sign_symbol(locale=LC_NUMERIC):
 
     :param locale: the `Locale` object or locale identifier
     """
-    return Locale.parse(locale).number_symbols.get('minusSign', u'-')
+    return Locale.parse(locale).number_symbols.get('minusSign', '-')
 
 
 def get_exponential_symbol(locale=LC_NUMERIC):
@@ -318,7 +317,7 @@ def get_exponential_symbol(locale=LC_NUMERIC):
 
     :param locale: the `Locale` object or locale identifier
     """
-    return Locale.parse(locale).number_symbols.get('exponential', u'E')
+    return Locale.parse(locale).number_symbols.get('exponential', 'E')
 
 
 def get_group_symbol(locale=LC_NUMERIC):
@@ -329,11 +328,11 @@ def get_group_symbol(locale=LC_NUMERIC):
 
     :param locale: the `Locale` object or locale identifier
     """
-    return Locale.parse(locale).number_symbols.get('group', u',')
+    return Locale.parse(locale).number_symbols.get('group', ',')
 
 
 def format_number(number, locale=LC_NUMERIC):
-    u"""Return the given number formatted for a specific locale.
+    """Return the given number formatted for a specific locale.
 
     >>> format_number(1099, locale='en_US')
     u'1,099'
@@ -374,7 +373,7 @@ def get_decimal_quantum(precision):
 
 def format_decimal(
         number, format=None, locale=LC_NUMERIC, decimal_quantization=True, group_separator=True):
-    u"""Return the given decimal number formatted for a specific locale.
+    """Return the given decimal number formatted for a specific locale.
 
     >>> format_decimal(1.2345, locale='en_US')
     u'1.234'
@@ -429,7 +428,7 @@ class UnknownCurrencyFormatError(KeyError):
 def format_currency(
         number, currency, format=None, locale=LC_NUMERIC, currency_digits=True,
         format_type='standard', decimal_quantization=True, group_separator=True):
-    u"""Return formatted currency value.
+    """Return formatted currency value.
 
     >>> format_currency(1099.98, 'USD', locale='en_US')
     u'$1,099.98'
@@ -657,7 +656,7 @@ class NumberFormatError(ValueError):
     """Exception raised when a string cannot be parsed into a number."""
 
     def __init__(self, message, suggestions=None):
-        super(NumberFormatError, self).__init__(message)
+        super().__init__(message)
         #: a list of properly formatted numbers derived from the invalid input
         self.suggestions = suggestions
 
@@ -730,7 +729,7 @@ def parse_decimal(string, locale=LC_NUMERIC, strict=False):
     decimal_symbol = get_decimal_symbol(locale)
 
     if not strict and (
-        group_symbol == u'\xa0' and  # if the grouping symbol is U+00A0 NO-BREAK SPACE,
+        group_symbol == '\xa0' and  # if the grouping symbol is U+00A0 NO-BREAK SPACE,
         group_symbol not in string and  # and the string to be parsed does not contain it,
         ' ' in string  # but it does contain a space instead,
     ):
@@ -775,7 +774,7 @@ PREFIX_PATTERN = r"(?P<prefix>(?:'[^']*'|%s)*)" % PREFIX_END
 NUMBER_PATTERN = r"(?P<number>%s*)" % NUMBER_TOKEN
 SUFFIX_PATTERN = r"(?P<suffix>.*)"
 
-number_re = re.compile(r"%s%s%s" % (PREFIX_PATTERN, NUMBER_PATTERN,
+number_re = re.compile(r"{}{}{}".format(PREFIX_PATTERN, NUMBER_PATTERN,
                                     SUFFIX_PATTERN))
 
 
@@ -868,7 +867,7 @@ def parse_pattern(pattern):
                          exp_prec, exp_plus)
 
 
-class NumberPattern(object):
+class NumberPattern:
 
     def __init__(self, pattern, prefix, suffix, grouping,
                  int_prec, frac_prec, exp_prec, exp_plus):
@@ -884,7 +883,7 @@ class NumberPattern(object):
         self.scale = self.compute_scale()
 
     def __repr__(self):
-        return '<%s %r>' % (type(self).__name__, self.pattern)
+        return f'<{type(self).__name__} {self.pattern!r}>'
 
     def compute_scale(self):
         """Return the scaling factor to apply to the number before rendering.
@@ -896,7 +895,7 @@ class NumberPattern(object):
         scale = 0
         if '%' in ''.join(self.prefix + self.suffix):
             scale = 2
-        elif u'‰' in ''.join(self.prefix + self.suffix):
+        elif '‰' in ''.join(self.prefix + self.suffix):
             scale = 3
         return scale
 
@@ -1023,11 +1022,11 @@ class NumberPattern(object):
             number,
             self.suffix[is_negative]])
 
-        if u'¤' in retval:
-            retval = retval.replace(u'¤¤¤',
+        if '¤' in retval:
+            retval = retval.replace('¤¤¤',
                                     get_currency_name(currency, value, locale))
-            retval = retval.replace(u'¤¤', currency.upper())
-            retval = retval.replace(u'¤', get_currency_symbol(currency, locale))
+            retval = retval.replace('¤¤', currency.upper())
+            retval = retval.replace('¤', get_currency_symbol(currency, locale))
 
         return retval
 
@@ -1086,7 +1085,7 @@ class NumberPattern(object):
     def _quantize_value(self, value, locale, frac_prec, group_separator):
         quantum = get_decimal_quantum(frac_prec[1])
         rounded = value.quantize(quantum)
-        a, sep, b = "{:f}".format(rounded).partition(".")
+        a, sep, b = f"{rounded:f}".partition(".")
         integer_part = a
         if group_separator:
             integer_part = self._format_int(a, self.int_prec[0], self.int_prec[1], locale)

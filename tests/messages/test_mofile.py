@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007-2011 Edgewall Software, 2013-2021 the Babel team
 # All rights reserved.
@@ -44,26 +43,26 @@ class WriteMoTestCase(unittest.TestCase):
         # can be applied to all subsequent messages by GNUTranslations
         # (ensuring all messages are safely converted to unicode)
         catalog = Catalog(locale='en_US')
-        catalog.add(u'', '''\
+        catalog.add('', '''\
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n''')
-        catalog.add(u'foo', 'Voh')
-        catalog.add((u'There is', u'There are'), (u'Es gibt', u'Es gibt'))
-        catalog.add(u'Fizz', '')
+        catalog.add('foo', 'Voh')
+        catalog.add(('There is', 'There are'), ('Es gibt', 'Es gibt'))
+        catalog.add('Fizz', '')
         catalog.add(('Fuzz', 'Fuzzes'), ('', ''))
         buf = BytesIO()
         mofile.write_mo(buf, catalog)
         buf.seek(0)
         translations = Translations(fp=buf)
-        self.assertEqual(u'Voh', translations.ugettext('foo'))
+        self.assertEqual('Voh', translations.ugettext('foo'))
         assert isinstance(translations.ugettext('foo'), str)
-        self.assertEqual(u'Es gibt', translations.ungettext('There is', 'There are', 1))
+        self.assertEqual('Es gibt', translations.ungettext('There is', 'There are', 1))
         assert isinstance(translations.ungettext('There is', 'There are', 1), str)
-        self.assertEqual(u'Fizz', translations.ugettext('Fizz'))
+        self.assertEqual('Fizz', translations.ugettext('Fizz'))
         assert isinstance(translations.ugettext('Fizz'), str)
-        self.assertEqual(u'Fuzz', translations.ugettext('Fuzz'))
+        self.assertEqual('Fuzz', translations.ugettext('Fuzz'))
         assert isinstance(translations.ugettext('Fuzz'), str)
-        self.assertEqual(u'Fuzzes', translations.ugettext('Fuzzes'))
+        self.assertEqual('Fuzzes', translations.ugettext('Fuzzes'))
         assert isinstance(translations.ugettext('Fuzzes'), str)
 
     def test_more_plural_forms(self):
@@ -74,18 +73,18 @@ class WriteMoTestCase(unittest.TestCase):
 
     def test_empty_translation_with_fallback(self):
         catalog1 = Catalog(locale='fr_FR')
-        catalog1.add(u'', '''\
+        catalog1.add('', '''\
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n''')
-        catalog1.add(u'Fuzz', '')
+        catalog1.add('Fuzz', '')
         buf1 = BytesIO()
         mofile.write_mo(buf1, catalog1)
         buf1.seek(0)
         catalog2 = Catalog(locale='fr')
-        catalog2.add(u'', '''\
+        catalog2.add('', '''\
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n''')
-        catalog2.add(u'Fuzz', 'Flou')
+        catalog2.add('Fuzz', 'Flou')
         buf2 = BytesIO()
         mofile.write_mo(buf2, catalog2)
         buf2.seek(0)
@@ -93,4 +92,4 @@ class WriteMoTestCase(unittest.TestCase):
         translations = Translations(fp=buf1)
         translations.add_fallback(Translations(fp=buf2))
 
-        self.assertEqual(u'Flou', translations.ugettext('Fuzz'))
+        self.assertEqual('Flou', translations.ugettext('Fuzz'))

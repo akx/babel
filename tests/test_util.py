@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007-2011 Edgewall Software, 2013-2021 the Babel team
 # All rights reserved.
@@ -61,15 +60,15 @@ parse_encoding = lambda s: util.parse_encoding(BytesIO(s.encode('utf-8')))
 
 
 def test_parse_encoding_defined():
-    assert parse_encoding(u'# coding: utf-8') == 'utf-8'
+    assert parse_encoding('# coding: utf-8') == 'utf-8'
 
 
 def test_parse_encoding_undefined():
-    assert parse_encoding(u'') is None
+    assert parse_encoding('') is None
 
 
 def test_parse_encoding_non_ascii():
-    assert parse_encoding(u'K\xf6ln') is None
+    assert parse_encoding('K\xf6ln') is None
 
 
 @pytest.mark.parametrize('source, result', [

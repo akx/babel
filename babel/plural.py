@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.numbers
     ~~~~~~~~~~~~~
@@ -72,7 +71,7 @@ def extract_operands(source):
     return n, i, v, w, f, t
 
 
-class PluralRule(object):
+class PluralRule:
     """Represents a set of language pluralization rules.  The constructor
     accepts a list of (tag, expr) tuples or a dict of `CLDR rules`_. The
     resulting object is callable and accepts one parameter with a positive or
@@ -119,9 +118,9 @@ class PluralRule(object):
 
     def __repr__(self):
         rules = self.rules
-        return '<%s %r>' % (
+        return '<{} {!r}>'.format(
             type(self).__name__,
-            ', '.join(['%s: %s' % (tag, rules[tag]) for tag in _plural_tags
+            ', '.join([f'{tag}: {rules[tag]}' for tag in _plural_tags
                        if tag in rules])
         )
 
@@ -146,9 +145,9 @@ class PluralRule(object):
         {'one': 'n is 1'}
         """
         _compile = _UnicodeCompiler().compile
-        return dict([(tag, _compile(ast)) for tag, ast in self.abstract])
+        return {tag: _compile(ast) for tag, ast in self.abstract}
 
-    tags = property(lambda x: frozenset([i[0] for i in x.abstract]), doc="""
+    tags = property(lambda x: frozenset(i[0] for i in x.abstract), doc="""
         A set of explicitly defined tags in this rule.  The implicit default
         ``'other'`` rules is not part of this set unless there is an explicit
         rule for it.""")
@@ -183,7 +182,7 @@ def to_javascript(rule):
     to_js = _JavaScriptCompiler().compile
     result = ['(function(n) { return ']
     for tag, ast in PluralRule.parse(rule).abstract:
-        result.append('%s ? %r : ' % (to_js(ast), tag))
+        result.append(f'{to_js(ast)} ? {tag!r} : ')
     result.append('%r; })' % _fallback_tag)
     return ''.join(result)
 
@@ -221,7 +220,7 @@ def to_python(rule):
     for tag, ast in PluralRule.parse(rule).abstract:
         # the str() call is to coerce the tag to the native string.  It's
         # a limited ascii restricted set of tags anyways so that is fine.
-        result.append(' if (%s): return %r' % (to_python_func(ast), str(tag)))
+        result.append(f' if ({to_python_func(ast)}): return {str(tag)!r}')
     result.append(' return %r' % _fallback_tag)
     code = compile('\n'.join(result), '<rule>', 'exec')
     eval(code, namespace)
@@ -321,7 +320,7 @@ _VARS = 'nivwft'
 
 _RULES = [
     (None, re.compile(r'\s+', re.UNICODE)),
-    ('word', re.compile(r'\b(and|or|is|(?:with)?in|not|mod|[{0}])\b'
+    ('word', re.compile(r'\b(and|or|is|(?:with)?in|not|mod|[{}])\b'
                         .format(_VARS))),
     ('value', re.compile(r'\d+')),
     ('symbol', re.compile(r'%|,|!=|=')),
@@ -374,7 +373,7 @@ def negate(rv):
     return 'not', (rv,)
 
 
-class _Parser(object):
+class _Parser:
     """Internal parser.  This class can translate a single rule into an abstract
     tree of tuples. It implements the following grammar::
 
@@ -428,7 +427,7 @@ class _Parser(object):
             term = repr(value is None and type_ or value)
         if not self.tokens:
             raise RuleError('expected %s but end of rule reached' % term)
-        raise RuleError('expected %s but got %r' % (term, self.tokens[-1][1]))
+        raise RuleError(f'expected {term} but got {self.tokens[-1][1]!r}')
 
     def condition(self):
         op = self.and_condition()
@@ -510,7 +509,7 @@ def _unary_compiler(tmpl):
 compile_zero = lambda x: '0'
 
 
-class _Compiler(object):
+class _Compiler:
     """The compilers are able to transform the expressions into multiple
     output formats.
     """
@@ -549,7 +548,7 @@ class _PythonCompiler(_Compiler):
         compile_range_list = '[%s]' % ','.join(
             ['(%s, %s)' % tuple(map(self.compile, range_))
              for range_ in range_list[1]])
-        return '%s(%s, %s)' % (method.upper(), self.compile(expr),
+        return '{}({}, {})'.format(method.upper(), self.compile(expr),
                                compile_range_list)
 
 
@@ -567,13 +566,13 @@ class _GettextCompiler(_Compiler):
         expr = self.compile(expr)
         for item in range_list[1]:
             if item[0] == item[1]:
-                rv.append('(%s == %s)' % (
+                rv.append('({} == {})'.format(
                     expr,
                     self.compile(item[0])
                 ))
             else:
                 min, max = map(self.compile, item)
-                rv.append('(%s >= %s && %s <= %s)' % (
+                rv.append('({} >= {} && {} <= {})'.format(
                     expr,
                     min,
                     expr,
@@ -598,7 +597,7 @@ class _JavaScriptCompiler(_GettextCompiler):
             self, method, expr, range_list)
         if method == 'in':
             expr = self.compile(expr)
-            code = '(parseInt(%s, 10) == %s && %s)' % (expr, expr, code)
+            code = f'(parseInt({expr}, 10) == {expr} && {code})'
         return code
 
 
@@ -625,7 +624,7 @@ class _UnicodeCompiler(_Compiler):
                 ranges.append(self.compile(item[0]))
             else:
                 ranges.append('%s..%s' % tuple(map(self.compile, item)))
-        return '%s%s %s %s' % (
+        return '{}{} {} {}'.format(
             self.compile(expr), negated and ' not' or '',
             method, ','.join(ranges)
         )

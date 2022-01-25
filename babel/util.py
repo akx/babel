@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.util
     ~~~~~~~~~~
@@ -84,7 +83,7 @@ def parse_encoding(fp):
                 magic_comment_encoding = m.group(1).decode('latin-1')
                 if magic_comment_encoding != 'utf-8':
                     raise SyntaxError(
-                        'encoding problem: {0} with BOM'.format(
+                        'encoding problem: {} with BOM'.format(
                             magic_comment_encoding))
             return 'utf-8'
         elif m:
@@ -237,7 +236,7 @@ class FixedOffsetTimezone(tzinfo):
         return self.zone
 
     def __repr__(self):
-        return '<FixedOffset "%s" %s>' % (self.zone, self._offset)
+        return f'<FixedOffset "{self.zone}" {self._offset}>'
 
     def utcoffset(self, dt):
         return self._offset

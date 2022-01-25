@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # file1.py for tests
 
 from gettext import gettext as _

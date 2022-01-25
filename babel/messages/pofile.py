@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.messages.pofile
     ~~~~~~~~~~~~~~~~~~~~~
@@ -10,7 +9,6 @@
     :license: BSD, see LICENSE for more details.
 """
 
-from __future__ import print_function
 import os
 import re
 
@@ -75,13 +73,13 @@ def denormalize(string):
 class PoFileError(Exception):
     """Exception thrown by PoParser when an invalid po file is encountered."""
     def __init__(self, message, catalog, line, lineno):
-        super(PoFileError, self).__init__('{message} on {lineno}'.format(message=message, lineno=lineno))
+        super().__init__(f'{message} on {lineno}')
         self.catalog = catalog
         self.line = line
         self.lineno = lineno
 
 
-class _NormalizedString(object):
+class _NormalizedString:
 
     def __init__(self, *args):
         self._strs = []
@@ -128,7 +126,7 @@ class _NormalizedString(object):
 
 
 
-class PoFileParser(object):
+class PoFileParser:
     """Support class to  read messages from a ``gettext`` PO (portable object) file
     and add them to a `Catalog`
 
@@ -170,14 +168,14 @@ class PoFileParser(object):
         """
         self.translations.sort()
         if len(self.messages) > 1:
-            msgid = tuple([m.denormalize() for m in self.messages])
+            msgid = tuple(m.denormalize() for m in self.messages)
         else:
             msgid = self.messages[0].denormalize()
         if isinstance(msgid, (list, tuple)):
             string = ['' for _ in range(self.catalog.num_plurals)]
             for idx, translation in self.translations:
                 if idx >= self.catalog.num_plurals:
-                    self._invalid_pofile(u"", self.offset, "msg has more translations than num_plurals of catalog")
+                    self._invalid_pofile("", self.offset, "msg has more translations than num_plurals of catalog")
                     continue
                 string[idx] = translation.denormalize()
             string = tuple(string)
@@ -313,8 +311,8 @@ class PoFileParser(object):
         # No actual messages found, but there was some info in comments, from which
         # we'll construct an empty header message
         if not self.counter and (self.flags or self.user_comments or self.auto_comments):
-            self.messages.append(_NormalizedString(u'""'))
-            self.translations.append([0, _NormalizedString(u'""')])
+            self.messages.append(_NormalizedString('""'))
+            self.translations.append([0, _NormalizedString('""')])
             self._add_message()
 
     def _invalid_pofile(self, line, lineno, msg):
@@ -325,7 +323,7 @@ class PoFileParser(object):
         # `line` is guaranteed to be unicode so u"{}"-interpolating would always
         # succeed, but on Python < 2 if not in a TTY, `sys.stdout.encoding`
         # is `None`, unicode may not be printable so we `repr()` to ASCII.
-        print(u"WARNING: Problem on line {0}: {1}".format(lineno + 1, repr(line)))
+        print(f"WARNING: Problem on line {lineno + 1}: {repr(line)}")
 
 
 def read_po(fileobj, locale=None, domain=None, ignore_obsolete=False, charset=None, abort_invalid=False):
@@ -451,7 +449,7 @@ def normalize(string, prefix='', width=76):
                                 # separate line
                                 buf.append(chunks.pop())
                             break
-                    lines.append(u''.join(buf))
+                    lines.append(''.join(buf))
             else:
                 lines.append(line)
     else:
@@ -464,7 +462,7 @@ def normalize(string, prefix='', width=76):
     if lines and not lines[-1]:
         del lines[-1]
         lines[-1] += '\n'
-    return u'""\n' + u'\n'.join([(prefix + escape(line)) for line in lines])
+    return '""\n' + '\n'.join([(prefix + escape(line)) for line in lines])
 
 
 def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
@@ -529,15 +527,15 @@ def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
         else:
             _width = 76
         for line in wraptext(comment, _width):
-            _write('#%s %s\n' % (prefix, line.strip()))
+            _write(f'#{prefix} {line.strip()}\n')
 
     def _write_message(message, prefix=''):
         if isinstance(message.id, (list, tuple)):
             if message.context:
-                _write('%smsgctxt %s\n' % (prefix,
+                _write('{}msgctxt {}\n'.format(prefix,
                                            _normalize(message.context, prefix)))
-            _write('%smsgid %s\n' % (prefix, _normalize(message.id[0], prefix)))
-            _write('%smsgid_plural %s\n' % (
+            _write(f'{prefix}msgid {_normalize(message.id[0], prefix)}\n')
+            _write('{}msgid_plural {}\n'.format(
                 prefix, _normalize(message.id[1], prefix)
             ))
 
@@ -551,10 +549,10 @@ def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
                 ))
         else:
             if message.context:
-                _write('%smsgctxt %s\n' % (prefix,
+                _write('{}msgctxt {}\n'.format(prefix,
                                            _normalize(message.context, prefix)))
-            _write('%smsgid %s\n' % (prefix, _normalize(message.id, prefix)))
-            _write('%smsgstr %s\n' % (
+            _write(f'{prefix}msgid {_normalize(message.id, prefix)}\n')
+            _write('{}msgstr {}\n'.format(
                 prefix, _normalize(message.string or '', prefix)
             ))
 
@@ -574,8 +572,8 @@ def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
                 for line in comment_header.splitlines():
                     lines += wraptext(line, width=width,
                                       subsequent_indent='# ')
-                comment_header = u'\n'.join(lines)
-            _write(comment_header + u'\n')
+                comment_header = '\n'.join(lines)
+            _write(comment_header + '\n')
 
         for comment in message.user_comments:
             _write_comment(comment)
@@ -597,9 +595,9 @@ def write_po(fileobj, catalog, width=76, no_location=False, omit_header=False,
 
             for filename, lineno in locations:
                 if lineno and include_lineno:
-                    locs.append(u'%s:%d' % (filename.replace(os.sep, '/'), lineno))
+                    locs.append('%s:%d' % (filename.replace(os.sep, '/'), lineno))
                 else:
-                    locs.append(u'%s' % filename.replace(os.sep, '/'))
+                    locs.append('%s' % filename.replace(os.sep, '/'))
             _write_comment(' '.join(locs), prefix=':')
         if message.flags:
             _write('#%s\n' % ', '.join([''] + sorted(message.flags)))

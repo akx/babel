@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (C) 2007-2011 Edgewall Software, 2013-2021 the Babel team
 # All rights reserved.
@@ -35,7 +34,7 @@ class CheckersTestCase(unittest.TestCase):
             except UnknownLocaleError:
                 # Just an alias? Not what we're testing here, let's continue
                 continue
-            po_file = (u"""\
+            po_file = ("""\
 # %(english_name)s translations for TestProject.
 # Copyright (C) 2007 FooBar, Inc.
 # This file is distributed under the same license as the TestProject
@@ -102,7 +101,7 @@ msgstr[0] ""
             except UnknownLocaleError:
                 # Just an alias? Not what we're testing here, let's continue
                 continue
-            po_file = (u"""\
+            po_file = ("""\
 # %(english_name)s translations for TestProject.
 # Copyright (C) 2007 FooBar, Inc.
 # This file is distributed under the same license as the TestProject

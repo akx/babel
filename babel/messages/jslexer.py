@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.messages.jslexer
     ~~~~~~~~~~~~~~~~~~~~~~
@@ -136,7 +135,7 @@ def unquote_string(string):
     if pos < len(string):
         add(string[pos:])
 
-    return u''.join(result)
+    return ''.join(result)
 
 
 def tokenize(source, jsx=True, dotted=True, template_string=True):

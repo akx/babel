@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
     babel.core
     ~~~~~~~~~~
@@ -105,7 +104,7 @@ class UnknownLocaleError(Exception):
         self.identifier = identifier
 
 
-class Locale(object):
+class Locale:
     """Representation of a specific locale.
 
     >>> locale = Locale('en', 'US')
@@ -263,7 +262,7 @@ class Locale(object):
         elif isinstance(identifier, Locale):
             return identifier
         elif not isinstance(identifier, str):
-            raise TypeError('Unexpected value for identifier: %r' % (identifier,))
+            raise TypeError(f'Unexpected value for identifier: {identifier!r}')
 
         parts = parse_locale(identifier, sep=sep)
         input_id = get_locale_identifier(parts)
@@ -350,7 +349,7 @@ class Locale(object):
         for key in ('territory', 'script', 'variant'):
             value = getattr(self, key)
             if value is not None:
-                parameters.append('%s=%r' % (key, value))
+                parameters.append(f'{key}={value!r}')
         parameter_string = '%r' % self.language + ', '.join(parameters)
         return 'Locale(%s)' % parameter_string
 
@@ -389,7 +388,7 @@ class Locale(object):
                 details.append(locale.variants.get(self.variant))
             details = filter(None, details)
             if details:
-                retval += ' (%s)' % u', '.join(details)
+                retval += ' (%s)' % ', '.join(details)
         return retval
 
     display_name = property(get_display_name, doc="""\
